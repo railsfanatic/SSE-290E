@@ -37,9 +37,11 @@ int main(int argc, char *argv[])
 		// INPUT the Voltage and Resistance as float values
 		v = getFloat("Voltage (V) (0 to quit): ");
 		
-		if (v == 0) break;
+		if (v == 0) break;	// quit on entering 0
 		
 		r = getFloat("Resistance (Ohm): ");
+		
+		if (r == 0) break;	// quit on entering 0
 	
 		// CALCULATE the Current and Power
 		i = calcCurrent(v, r);
@@ -60,17 +62,27 @@ int main(int argc, char *argv[])
 	return 0;	// Exit program with no error
 }
 
+/*	calcCurrent:	calculate the current given V and R
+	inputs:			voltage (V) (float), resistance (Ohm) (float)
+	output:			current (A) (float)		*/
 float calcCurrent(float voltage, float resistance)
 {
 	if (resistance > 0) {
+		//	Per Ohm's Law:	I = V/R
 		return voltage / resistance;
 	} else {
+		/*	Cannot divide by zero; a "lazy" solution that
+			should never be reached because we quit on entering 0.	*/
 		return 0;
 	}
 }
 
+/*	calcPower:	calculate the power given voltage and current
+	inputs:			voltage (V) (float), current (A) (float)
+	output:			power (W) (float)		*/
 float calcPower(float voltage, float current)
 {
+	// 	P = VI
 	return voltage * current;
 }
 
@@ -86,7 +98,7 @@ float getFloat(char* prompt)
 	return atof(numString);  		// stdlib fn converts string to float
 }
 
-/*	runTests:
+/*	runTests:		Subroutine to test main program functions
 	Argument:		none
 	Returns:		number of failed tests (0 for all pass)	*/
 int runTests()
@@ -111,29 +123,31 @@ int runTests()
 			i_calc = 0.0,	// actual (calculated) current
 			p_calc = 0.0;	// actual (calculated) power
 	int 	pass = 0;
-	printf("\033[0m");
-	printf("     Volts  Resistance  Current(Exp)   Power(Exp)  Current(Act)  Power(Act)  Pass?\n");
+	printf("\033[0m"); // normal color
+	printf("     Volts  Resistance  Current(Exp)   Power(Exp)  Current(Act)  Power(Act)  Pass?\n");  // heading
 	while (test_values[index] > 0) {
 			 v = test_values[index];
 			 r = test_values[index+1];
-		 i_exp = test_values[index+2];
+		 i_exp = test_values[index+2];	// expected values
 		 p_exp = test_values[index+3];
-		i_calc = calcCurrent(v, r);
-		p_calc = calcPower(v, i_calc);
+		i_calc = calcCurrent(v, r);		// calculated values
+		p_calc = calcPower(v, i_calc);	// pass if (calculated values == expected values)
 		  pass = (i_calc == i_exp && p_calc == p_exp);
 		
-		if (pass) printf("\x1B[32m"); else printf("\x1B[31m");
+		if (pass) printf("\x1B[32m"); else printf("\x1B[31m");  // green = pass; red = fail
+		// Print tabulated test values:
 		printf("%10.2f  %10.2f    %10.2f  %10.2f     %10.2f  %10.2f      %d\n", v, r, i_exp, p_exp, i_calc, p_calc, pass);
 		
-		index += 4;
-		failedCount += !pass;
+		index += 4;		// increment the test data array index
+		failedCount += !pass;		// increment the failed counter if didn't pass
 	}
 	
-	printf("\033[0m");
+	printf("\033[0m");	// normal color
 	
 	int total = index / 4;
+	// Print tests summary
 	printf("Exp = Expected value, Act = Actual value.\n\n");
 	printf("%d tests run;  %d Passed,  %d Failed.\n\n", total, total - failedCount, failedCount);
 	
-	return failedCount;
+	return failedCount;		// return # of failed tests
 }
