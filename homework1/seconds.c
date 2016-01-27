@@ -15,7 +15,7 @@ int runTests(); 					// testing subroutine
 
 int main(int argc, char *argv[])
 {
-	int	intSec = 3600000;  // input seconds (set to "unreasonable" value)
+	int	intSec = 0;  // input seconds
 	
 	/*	TESTING:
 		Run the program with -t option to test  */
@@ -28,16 +28,20 @@ int main(int argc, char *argv[])
 	}
 	
 	/*	INPUT number of seconds using an input wrapper;
-		Check for "unreasonable" value (< –999:59:59 or > 999:59:59):  */
-	while (intSec < -3599999 || intSec > 3599999) {
-		intSec = getInteger("Please enter number of seconds: ");
-	}
+		Check for "unreasonable" values (< 0 or > 999:59:59):  */
+	intSec = getInteger("Please enter number of seconds: ");
+	if (intSec < 0) intSec = 0;
+	if (intSec > 3599999) intSec = 359999;
 	
 	// OUTPUT the final time code in the desired format:
-	printf("Time code: %s\n\n", timeCode(intSec));
+	printf("%d Seconds to Timecode: \n\n\t%s\n\n", intSec, timeCode(intSec));
 	
 	#ifdef _MSC_VER	// Extra pause (Visual Studio only)
-		getInteger("");
+		// http://c-faq.com/stdio/stdinflush2.html
+		int c = 0;
+		while((c = getchar()) != '\n' && c != EOF)
+			/* discard */ ;
+		getchar();
 	#endif
 	return 0;	// Exit program with no error
 }
@@ -52,21 +56,24 @@ const char* timeCode(int seconds)
 		s = 0;		// seconds
 	static char buffer[10];	// pass to snprintf to store formatted string for return
 	
-	h = seconds / 3600;					// Calculate # of hours
-	m = (seconds % 3600) / 60;			// Calculate # of minutes
-	s = seconds - (h * 3600 + m * 60);	// Calculate # of seconds
+	h = seconds / 3600;					// Calculate # of whole hours
+	m = (seconds % 3600) / 60;			// Calculate # of remaining whole minutes
+	s = seconds - (h * 3600 + m * 60);	// Calculate # of remaining seconds
 	
-	/*	Format the time code based on whether or not we have
-		hours and minutes components:	*/
-	if (h > 0) {
-		snprintf(buffer, 10, "%d:%02d:%02d", h, m, s);
-	} else if (m > 0) {
-		snprintf(buffer, 10, "%d:%02d", m, s);
-	} else {
-		snprintf(buffer, 10, "%02d", s);
-	}
+	snprintf(buffer, 10, "%d:%02d:%02d", h, m, s);
 	
 	return buffer;
+}
+
+/*	getInteger input wrapper:
+	Argument:		char* prompt: string for user prompt
+	Returns:		integer (converted from input string)	*/
+int getInteger(char* prompt)
+{
+	char numString[8];				// variable to store input
+	printf("%s", prompt);			// prompt user
+	fgets(numString, 8, stdin);		// get input as string
+	return atoi(numString);  		// stdlib fn converts string to integer
 }
 
 /*	runTests:
@@ -74,16 +81,17 @@ const char* timeCode(int seconds)
 	Returns:		number of failed tests (0 for all pass)	*/
 int runTests()
 {
-	const int NUM_TESTS = 6;
+	// Visual Studio does not allow dimming arrays with a const!
+	#define NUM_TESTS 6
 	
 	// Some human determined values and expected results
 	int testInputs[NUM_TESTS] = {
-			 100,			  500,			 3600,
-			 9876,			11234,			87654
+			    0,			  100,			 501,
+			 3600,			11234,			87654
 	};
 	char* testResults[NUM_TESTS] = {
-			"1:40",			"8:20",		  "1:00:00",
-		 "2:44:36",		 "3:07:14",		 "24:20:54"
+		 "0:00:00",		 "0:01:40",		 "0:08:21",
+		 "1:00:00",		 "3:07:14",		 "24:20:54"
  	};
 	const char* testCode;	// Store result of timeCode fn
 	int pass;				// Store result of string comparison
@@ -99,15 +107,4 @@ int runTests()
 	printf("\n");
 	printf("%d Passed, %d Failed\n\n", (NUM_TESTS - failedCount), failedCount);
 	return failedCount;
-}
-
-/*	getInteger input wrapper:
-	Argument:		char* prompt: string for user prompt
-	Returns:		integer (converted from input string)	*/
-int getInteger(char* prompt)
-{
-	char numString[7];				// variable to store input
-	printf("%s", prompt);			// prompt user
-	fgets(numString, 10, stdin);	// get input as string
-	return atoi(numString);  	// stdlib fn converts string to integer
 }

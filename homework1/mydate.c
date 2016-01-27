@@ -13,7 +13,7 @@ int main()
 {
 	int m = 0, 		// month
 		d = 0, 		// day
-		y = -9999;	// year (set initially to "unreasonable" value)
+		y = -9999;	// year (set initially to an "unreasonable" value so that it prompts)
 	
 	/*	Input month, day, and year using an input wrapper;
 		Loop each input until "reasonable" value entered.		*/
