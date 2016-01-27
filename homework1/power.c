@@ -4,7 +4,7 @@
 		Ohm's law:	I = V/R
 		Power: 		P = VI
 	Tom Grushka
-	Jan. 26, 2016 */
+	Jan. 27, 2016 */
 
 #include <stdio.h>
 #include <stdlib.h> 	// use atof()
@@ -33,15 +33,22 @@ int main(int argc, char *argv[])
 		return failedCount;  // return number of failed tests
 	}
 	
-	v = getFloat("Voltage (V): ");
-	r = getFloat("Resistance (Ohm): ");
+	while (1) {
+		// INPUT the Voltage and Resistance as float values
+		v = getFloat("Voltage (V) (0 to quit): ");
+		
+		if (v == 0) break;
+		
+		r = getFloat("Resistance (Ohm): ");
 	
-	i = calcCurrent(v, r);
-	p = calcPower(v, i);
+		// CALCULATE the Current and Power
+		i = calcCurrent(v, r);
+		p = calcPower(v, i);
 	
-	// OUTPUT the final data:
-	printf("For a given %.2f V applied to a %.2f-Ohm resistor,\n", v, r);
-	printf("the current is %.2f A and the power dissipated is %.2f W.\n\n", i, p);
+		// OUTPUT the final data:
+		printf("For a given %.2f V applied to a %.2f-Ohm resistor,\n", v, r);
+		printf("the current is %.2f A and the power dissipated is %.2f W.\n\n", i, p);
+	}
 	
 	#ifdef _MSC_VER	// Extra pause (Visual Studio only)
 		// http://c-faq.com/stdio/stdinflush2.html
@@ -84,7 +91,49 @@ float getFloat(char* prompt)
 	Returns:		number of failed tests (0 for all pass)	*/
 int runTests()
 {
-	// Visual Studio does not allow dimming arrays with a const!
-	#define NUM_TESTS 0
-	return 0;
+	float test_values[] = {
+	//	Volts,  Resistance,  Current (Expected),  Power (Expected)
+	//	TEST PROBLEMS from http://www.allaboutcircuits.com/textbook/direct-current/chpt-2/calculating-electric-power/:
+		   18,			 3,					  6,			   108,
+		   36,			 3,					 12,			   432,
+	//	TEST PROBLEMS from https://www.grc.nasa.gov/www/k-12/Sample_Projects/Ohms_Law/ohmslaw.html:
+		    9,			18,				    0.5,			   4.5,
+		  110,	 	  2200,				   0.05,			   5.5,
+		  4.0,			40,				    0.1,			   0.4,
+		  0
+	};
+	int 	index = 0,
+			failedCount = 0;
+	float	v = 0.0,	// input voltage
+			r = 0.0,	// input resistance
+			i_exp = 0.0,	// expected current
+			p_exp = 0.0,	// expected power
+			i_calc = 0.0,	// actual (calculated) current
+			p_calc = 0.0;	// actual (calculated) power
+	int 	pass = 0;
+	printf("\033[0m");
+	printf("     Volts  Resistance  Current(Exp)   Power(Exp)  Current(Act)  Power(Act)  Pass?\n");
+	while (test_values[index] > 0) {
+			 v = test_values[index];
+			 r = test_values[index+1];
+		 i_exp = test_values[index+2];
+		 p_exp = test_values[index+3];
+		i_calc = calcCurrent(v, r);
+		p_calc = calcPower(v, i_calc);
+		  pass = (i_calc == i_exp && p_calc == p_exp);
+		
+		if (pass) printf("\x1B[32m"); else printf("\x1B[31m");
+		printf("%10.2f  %10.2f    %10.2f  %10.2f     %10.2f  %10.2f      %d\n", v, r, i_exp, p_exp, i_calc, p_calc, pass);
+		
+		index += 4;
+		failedCount += !pass;
+	}
+	
+	printf("\033[0m");
+	
+	int total = index / 4;
+	printf("Exp = Expected value, Act = Actual value.\n\n");
+	printf("%d tests run;  %d Passed,  %d Failed.\n\n", total, total - failedCount, failedCount);
+	
+	return failedCount;
 }
