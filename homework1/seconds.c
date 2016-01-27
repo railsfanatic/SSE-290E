@@ -50,7 +50,7 @@ const char* timeCode(int seconds)
 	int h = 0, 		// hours
 		m = 0, 		// minutes
 		s = 0;		// seconds
-	static char buffer[10];
+	static char buffer[10];	// pass to snprintf to store formatted string for return
 	
 	h = seconds / 3600;					// Calculate # of hours
 	m = (seconds % 3600) / 60;			// Calculate # of minutes
