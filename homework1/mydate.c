@@ -33,7 +33,11 @@ int main()
 	printf("Date entered: %d/%d/%04d\n", m, d, y);
 	
 	#ifdef _MSC_VER	// Extra pause (Visual Studio only)
-		getInteger("");
+		// http://c-faq.com/stdio/stdinflush2.html
+		int c = 0;
+		while((c = getchar()) != '\n' && c != EOF)
+			/* discard */ ;
+		getchar();
 	#endif
 	return 0;	// Exit program with no error
 }
@@ -46,5 +50,5 @@ int getInteger(char* prompt)
 	char numString[7];				// variable to store input
 	printf("%s", prompt);			// prompt user
 	fgets(numString, 10, stdin);	// get input as string
-	return atoi(numString);  	// stdlib fn converts string to integer
+	return atoi(numString);  		// stdlib fn converts string to integer
 }

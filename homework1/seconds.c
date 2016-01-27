@@ -8,7 +8,7 @@
 #include <stdlib.h> 	// use atoi()
 #include <string.h> 	// use strcmp()
 
-/*  function definitions  */
+/*  Function definitions  */
 int getInteger(char* prompt); 		// input wrapper function
 const char* timeCode(int seconds); 	// timeCode formatter function
 int runTests(); 					// testing subroutine
@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
 	return 0;	// Exit program with no error
 }
 
-/*	timeCode:  function that generates the desired time format
-	Argument:		int seconds = number of seconds
+/*	timeCode:  function that calculates, formats & returns the Timecode
+	Argument:		int seconds = number of seconds to convert to h:mm:ss
 	Returns:		const char* of the time code in desired format	*/
 const char* timeCode(int seconds)
 {
@@ -60,6 +60,7 @@ const char* timeCode(int seconds)
 	m = (seconds % 3600) / 60;			// Calculate # of remaining whole minutes
 	s = seconds - (h * 3600 + m * 60);	// Calculate # of remaining seconds
 	
+	// Format the Timecode and store in buffer:
 	snprintf(buffer, 10, "%d:%02d:%02d", h, m, s);
 	
 	return buffer;
@@ -95,16 +96,16 @@ int runTests()
  	};
 	const char* testCode;	// Store result of timeCode fn
 	int pass;				// Store result of string comparison
-	int failedCount = 0;
+	int failedCount = 0;	// Count failed tests
 	
 	printf(" #    Seconds      Should be         Result  Pass?\n");
 	for (int i = 0; i < NUM_TESTS; i++) {
 		testCode = timeCode(testInputs[i]);		// run the actual test
 		pass = (strcmp(testCode, testResults[i]) == 0);
-		failedCount += !pass;	// count number of failed tests
+		failedCount += !pass;	// Increment counter if test does NOT pass
 		printf("%2d %10d %14s %14s %4d \n", i, testInputs[i], testResults[i], testCode, pass);
 	}
-	printf("\n");
+	printf("\n");	// Summarize & return
 	printf("%d Passed, %d Failed\n\n", (NUM_TESTS - failedCount), failedCount);
 	return failedCount;
 }
