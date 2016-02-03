@@ -58,7 +58,7 @@ const char* timeCode(int seconds)
 	
 	h = seconds / 3600;					// Calculate # of whole hours
 	m = (seconds % 3600) / 60;			// Calculate # of remaining whole minutes
-	s = seconds - (h * 3600 + m * 60);	// Calculate # of remaining seconds
+	s = seconds % 60;  // Calculate # of remaining seconds
 	
 	// Format the Timecode and store in buffer:
 	snprintf(buffer, 10, "%d:%02d:%02d", h, m, s);
@@ -98,13 +98,16 @@ int runTests()
 	int pass;				// Store result of string comparison
 	int failedCount = 0;	// Count failed tests
 	
+	printf("\033[0m"); // normal color
 	printf(" #    Seconds      Should be         Result  Pass?\n");
 	for (int i = 0; i < NUM_TESTS; i++) {
 		testCode = timeCode(testInputs[i]);		// run the actual test
 		pass = (strcmp(testCode, testResults[i]) == 0);
 		failedCount += !pass;	// Increment counter if test does NOT pass
+		if (pass) printf("\x1B[32m"); else printf("\x1B[31m");  // green = pass; red = fail
 		printf("%2d %10d %14s %14s %4d \n", i, testInputs[i], testResults[i], testCode, pass);
 	}
+	printf("\033[0m");	// normal color
 	printf("\n");	// Summarize & return
 	printf("%d Passed, %d Failed\n\n", (NUM_TESTS - failedCount), failedCount);
 	return failedCount;

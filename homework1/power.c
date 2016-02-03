@@ -11,14 +11,14 @@
 #include <string.h>		// strcmp() for argument check
 
 /*  Function definitions  */
-float getFloat(char* prompt); 		// input wrapper function
+double getDouble(char* prompt); 		// input wrapper function
 int runTests(); 					// testing subroutine
-float calcCurrent(float voltage, float resistance);	// calculate the current
-float calcPower(float voltage, float current);	// calculate the power
+double calcCurrent(double voltage, double resistance);	// calculate the current
+double calcPower(double voltage, double current);	// calculate the power
 
 int main(int argc, char *argv[])
 {
-	float	v = 0.0,	// input voltage
+	double	v = 0.0,	// input voltage
 			r = 0.0,	// input resistance
 			i = 0.0,	// calculated current
 			p = 0.0;	// calculated power
@@ -28,18 +28,18 @@ int main(int argc, char *argv[])
 	if (argc == 2 && strcmp(argv[1], "-t") == 0) {
 		int failedCount = runTests();
 		#ifdef _MSC_VER	// Extra pause (Visual Studio only)
-			getFloat("");
+			getDouble("");
 		#endif
 		return failedCount;  // return number of failed tests
 	}
 	
 	while (1) {
-		// INPUT the Voltage and Resistance as float values
-		v = getFloat("Voltage (V) (0 to quit): ");
+		// INPUT the Voltage and Resistance as double values
+		v = getDouble("Voltage (V) (0 to quit): ");
 		
 		if (v == 0) break;	// quit on entering 0
 		
-		r = getFloat("Resistance (Ohm): ");
+		r = getDouble("Resistance (Ohm): ");
 		
 		if (r == 0) break;	// quit on entering 0
 	
@@ -63,9 +63,9 @@ int main(int argc, char *argv[])
 }
 
 /*	calcCurrent:	calculate the current given V and R
-	inputs:			voltage (V) (float), resistance (Ohm) (float)
-	output:			current (A) (float)		*/
-float calcCurrent(float voltage, float resistance)
+	inputs:			voltage (V) (double), resistance (Ohm) (double)
+	output:			current (A) (double)		*/
+double calcCurrent(double voltage, double resistance)
 {
 	if (resistance > 0) {
 		//	Per Ohm's Law:	I = V/R
@@ -78,24 +78,24 @@ float calcCurrent(float voltage, float resistance)
 }
 
 /*	calcPower:	calculate the power given voltage and current
-	inputs:			voltage (V) (float), current (A) (float)
-	output:			power (W) (float)		*/
-float calcPower(float voltage, float current)
+	inputs:			voltage (V) (double), current (A) (double)
+	output:			power (W) (double)		*/
+double calcPower(double voltage, double current)
 {
 	// 	P = VI
 	return voltage * current;
 }
 
 
-/*	getFloat input wrapper:
+/*	getDouble input wrapper:
 	Argument:		char* prompt: string for user prompt
-	Returns:		float (converted from input string)	*/
-float getFloat(char* prompt)
+	Returns:		double (converted from input string)	*/
+double getDouble(char* prompt)
 {
 	char numString[10];				// variable to store input
 	printf("%s", prompt);			// prompt user
 	fgets(numString, 10, stdin);	// get input as string
-	return atof(numString);  		// stdlib fn converts string to float
+	return atof(numString);  		// stdlib fn converts string to double
 }
 
 /*	runTests:		Subroutine to test main program functions
@@ -103,7 +103,7 @@ float getFloat(char* prompt)
 	Returns:		number of failed tests (0 for all pass)	*/
 int runTests()
 {
-	float test_values[] = {
+	double test_values[] = {
 	//	Volts,  Resistance,  Current (Expected),  Power (Expected)
 	//	TEST PROBLEMS from http://www.allaboutcircuits.com/textbook/direct-current/chpt-2/calculating-electric-power/:
 		   18,			 3,					  6,			   108,
@@ -116,7 +116,7 @@ int runTests()
 	};
 	int 	index = 0,
 			failedCount = 0;
-	float	v = 0.0,	// input voltage
+	double	v = 0.0,	// input voltage
 			r = 0.0,	// input resistance
 			i_exp = 0.0,	// expected current
 			p_exp = 0.0,	// expected power

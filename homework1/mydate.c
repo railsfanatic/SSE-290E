@@ -5,7 +5,7 @@
 	Jan. 26, 2016 */
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>	// use atoi()
 
 int getInteger(char* prompt); // define input wrapper
 
@@ -13,30 +13,27 @@ int main()
 {
 	int m = 0, 		// month
 		d = 0, 		// day
-		y = -9999;	// year (set initially to an "unreasonable" value so that it prompts)
+		y = -9999;	// year (set to "unreasonable" value so it prompts)
 	
-	/*	Input month, day, and year using an input wrapper;
+	/*	INPUT month, day, and year using an input wrapper;
 		Loop each input until "reasonable" value entered.		*/
-	while (m < 1 || m > 12) {
-		m = getInteger("Month: ");
-	}
-	while (d < 1 || d > 31) {
-		d = getInteger("Day: ");
-	}
-	while (y < -8000 || y > 9999) {
-		/*	This program assumes it will be obsolete in 8,000 years,
-			and the oldest known calendar is 10,000 years old.  */
-		y = getInteger("Year: ");
+	printf("Please enter a month, day, and year (Ctrl-C to quit):\n\n");
+	while (m < 1 || m > 12) { m = getInteger("Month (##): "); }
+	while (d < 1 || d > 31) { d = getInteger("Day (##): "); }
+	while (y < 1000 || y > 9999) {
+		/*	Assumptions:  This program will be obsolete in 8,000 years;
+			 Force 4-digit years; 2-digit years will convert. */
+		y = getInteger("Year (####): ");
+		if (y > 30 && y < 100) y = y + 1900;
+		if (y >= 0 && y <= 30) y = y + 2000;
 	}
 	
-	// Output the date in the desired format: #/#/####
+	// OUTPUT the date in the desired format: #/#/####
 	printf("Date entered: %d/%d/%04d\n", m, d, y);
 	
 	#ifdef _MSC_VER	// Extra pause (Visual Studio only)
 		// http://c-faq.com/stdio/stdinflush2.html
-		int c = 0;
-		while((c = getchar()) != '\n' && c != EOF)
-			/* discard */ ;
+		int c = 0; while((c = getchar()) != '\n' && c != EOF) /* discard */ ;
 		getchar();
 	#endif
 	return 0;	// Exit program with no error
