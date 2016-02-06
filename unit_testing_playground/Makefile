@@ -42,18 +42,24 @@ CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wundef
 CFLAGS += -Wold-style-definition
 
-TARGET_BASE1=bin/multiples
-TARGET1 = $(TARGET_BASE1)$(TARGET_EXTENSION)
-SRC_FILES1=$(UNITY_ROOT)/src/unity.c multiples.c
-INC_DIRS=-I. -I$(UNITY_ROOT)/src
-SYMBOLS=-DTEST
+TARGET_DIR = bin/
+TARGET_BASE1 = homework2
+TARGET1 = $(TARGET_DIR)$(TARGET_BASE1)$(TARGET_EXTENSION)
+TEST_TARGET1 = $(TARGET_DIR)test_$(TARGET_BASE1)$(TARGET_EXTENSION)
+SRC_FILES1 = multiples.c
+MAIN_FILE1 = homework2.c
+TEST_FILES1 = $(UNITY_ROOT)/src/unity.c test/test_multiples.c test/test_runners/test_multiples_runner.c
+INC_DIRS = -I.
+TEST_INC_DIRS = -I$(UNITY_ROOT)/src
+SYMBOLS = -DTEST
 
 all: clean default
 
 default:
 	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb test/test_multiples.c  test/test_runners/test_multiples_runner.c
-	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -o $(TARGET1)
-	./$(TARGET1)
+	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(TEST_INC_DIRS) $(SYMBOLS) $(SRC_FILES1) $(TEST_FILES1) -o $(TEST_TARGET1)
+	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SRC_FILES1) $(MAIN_FILE1) -o $(TARGET1)
+	./$(TEST_TARGET1)
 
 clean:
 	$(CLEANUP) bin/*.* test/test_runners/*.*
