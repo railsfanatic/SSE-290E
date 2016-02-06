@@ -48,20 +48,10 @@ int main(int argc, char** argv)
 	return:		user input converted to integer	*/
 int getInteger(const char *prompt)
 {
-	// Some code by David C. Rankin, http://stackoverflow.com/questions/27326839/how-to-read-input-of-unknown-length-using-fgets
-	char *input = NULL;		// input buffer
-	int myInt = 0;			// integer to return
-    size_t n = 0;           // max chars to read (0 = no limit)
-    ssize_t nchr = 0;       // # chars read
+	int myInt = 0;	// int to return
 	
 	printf("%s", prompt);	// Display the prompt
-	
-	if ((nchr = getline(&input, &n, stdin)) != -1)
-		input[--nchr] = 0;	// strip newline
-	
-	myInt = atoi(input);	// convert to integer & store
-	
-	free(input);			// "de-allocate" input variable
+	scanf("%d", &myInt);	// request input
 	
 	return myInt;			// return integer
 }

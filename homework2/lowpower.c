@@ -78,20 +78,10 @@ int main(int argc, char** argv)
 	return:		user input converted to float	*/
 float getFloat(const char *prompt)
 {
-	// Some code by David C. Rankin, http://stackoverflow.com/questions/27326839/how-to-read-input-of-unknown-length-using-fgets
-	char *input = NULL;		// input buffer
-	float myFloat = 0.0;	// floating point number to return
-    size_t n = 0;           // max chars to read (0 = no limit)
-    ssize_t nchr = 0;       // # chars read
+	float myFloat = 0;	// float to return
 	
 	printf("%s", prompt);	// Display the prompt
+	scanf("%f", &myFloat);	// request input
 	
-	if ((nchr = getline(&input, &n, stdin)) != -1)
-		input[--nchr] = 0;	// strip newline
-	
-	myFloat = atof(input);	// convert to float & store
-	
-	free(input);			// "de-allocate" input variable
-	
-	return myFloat;			// return float
+	return myFloat;			// return integer
 }

@@ -102,7 +102,7 @@ int main(int argc, char** argv)
 	
 	// INPUT: ask user whether to print only factors, all numbers, or all primes
 	if (checkForPrime)
-		printAllNumbers = (int)getLongLong("Print What (0 = Only Factors, 1 = All Numbers, 2 = Only Primes) ?");
+		printAllNumbers = (int)getLongLong("Print What (0 = Only Factors, 1 = All Numbers, 2 = Factors + Primes) ?");
 	else
 		printAllNumbers = (int)getLongLong("Print What (0 = Only Factors, 1 = All Numbers) ?");
 	
@@ -142,26 +142,16 @@ int main(int argc, char** argv)
 	return 0;	// return without error
 }
 
-/*	getInteger
+/*	getLongLong
 	argument:	prompt (const char *)
 				string to prompt the user
-	return:		user input converted to integer	*/
+	return:		user input converted to long long	*/
 long long getLongLong(const char *prompt)
 {
-	// Some code for getline by David C. Rankin, http://stackoverflow.com/questions/27326839/how-to-read-input-of-unknown-length-using-fgets
-	char *input = NULL;		// input buffer
-	long long myLongLong = 0;			// integer to return
-    size_t n = 0;           // max chars to read (0 = no limit)
-    ssize_t nchr = 0;       // # chars read
+	long long myLongLong = 0;	// long long to return
 	
 	printf("%s", prompt);	// Display the prompt
-	
-	if ((nchr = getline(&input, &n, stdin)) != -1)
-		input[--nchr] = 0;	// strip newline
-	
-	myLongLong = atoll(input);	// convert to integer & store
-	
-	free(input);			// "de-allocate" input variable
+	scanf("%lld", &myLongLong);	// request input
 	
 	return myLongLong;			// return integer
 }
