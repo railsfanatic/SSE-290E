@@ -1,5 +1,5 @@
 #include "unity.h"
-#include "../multiples.h"
+#include "multiples.h"
 
 void setUp(void)
 {

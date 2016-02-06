@@ -42,10 +42,10 @@ CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wundef
 CFLAGS += -Wold-style-definition
 
-TARGET_BASE1=multiples
+TARGET_BASE1=bin/multiples
 TARGET1 = $(TARGET_BASE1)$(TARGET_EXTENSION)
-SRC_FILES1=$(UNITY_ROOT)/src/unity.c multiples.c  test/test_multiples.c  test/test_runners/test_multiples_runner.c
-INC_DIRS=-Isrc -I$(UNITY_ROOT)/src
+SRC_FILES1=$(UNITY_ROOT)/src/unity.c multiples.c
+INC_DIRS=-I. -I$(UNITY_ROOT)/src
 SYMBOLS=-DTEST
 
 all: clean default
@@ -56,5 +56,5 @@ default:
 	./$(TARGET1)
 
 clean:
-	$(CLEANUP)
+	$(CLEANUP) bin/*.* test/test_runners/*.*
 
