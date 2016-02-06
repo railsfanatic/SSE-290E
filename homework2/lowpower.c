@@ -5,7 +5,7 @@
 		P = V^2 / R
 	If POWER EXCEEDS MAX_POWER (0.25) W, print error & start over.
 	Else print calculated POWER.
-	by Tom Grushka
+	Tom Grushka
 	February 5, 2016	*/
 
 #include <stdio.h>

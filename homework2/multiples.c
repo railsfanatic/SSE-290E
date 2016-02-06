@@ -2,7 +2,7 @@
 	multiples.c:
 	Prompts the user for a POSITIVE INTEGER limit and prints all
 	multiples of 5 that DO NOT EXCEED the entered limit.
-	by Tom Grushka
+	Tom Grushka
 	February 5, 2016	*/
 
 #include <stdio.h>
