@@ -8,18 +8,18 @@
 
 int main(int argc, const char *argv[])
 {
-	char grade;
+	char *grade;
 	
-	if (argc == 2) {
-		strncpy(&grade, argv[1], 1);
-	} else {
-		printf("Enter a letter grade: ");
-		fgets(&grade, 1, stdin);
-	}
+	//if (argc == 2) {
+		grade = argv[1];
+	//} else {
+	//	printf("Enter a letter grade: ");
+	//	fgets(grade, 1, stdin);
+	//}
 	
-	printf("Grade: %c \n", grade);
+	printf("Grade: %c \n", *grade);
 	
-	switch (grade) {
+	switch (*grade) {
 		case 'A':
 		case 'a':
 			printf("The mark is 90 to 100.\n");
