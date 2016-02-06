@@ -8,6 +8,7 @@
 	Tom Grushka
 	February 5, 2016	*/
 
+#define _CRT_SECURE_NO_WARNINGS	// allow scanf on Windows
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -54,7 +55,7 @@ int main(int argc, char** argv)
 		} while (resistance <= 0);
 		
 		//	Calculate the power:	power = voltage ^2 / resistance
-		power = (pow(voltage, 2)) / resistance;
+		power = (float)(pow(voltage, 2)) / resistance;
 		
 		//	Cannot exceed MAX_POWER!
 		if (power > MAX_POWER)

@@ -5,6 +5,7 @@
 	Tom Grushka
 	February 5, 2016	*/
 
+#define _CRT_SECURE_NO_WARNINGS	// allow scanf on Windows
 #include <stdio.h>
 #include <stdlib.h>
 
