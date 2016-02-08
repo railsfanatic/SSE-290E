@@ -1,5 +1,8 @@
-all:
-	gcc -o bin/grade grade.c
-	gcc -o bin/mark mark.c
-	gcc -o bin/counter counter.c
-	
+SRCS = $(wildcard *.c)
+
+PROGS = $(patsubst %.c,%,$(SRCS))
+
+all: $(PROGS)
+
+%: %.c
+	$(CC) $(CFLAGS)  -o bin/$@ $<

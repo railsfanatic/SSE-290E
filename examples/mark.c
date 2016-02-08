@@ -11,7 +11,7 @@ int main(int argc, const char *argv[])
 	char *grade;
 	
 	//if (argc == 2) {
-		grade = argv[1];
+		grade = (char *)argv[1];
 	//} else {
 	//	printf("Enter a letter grade: ");
 	//	fgets(grade, 1, stdin);
