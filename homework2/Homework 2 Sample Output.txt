@@ -1,0 +1,81 @@
+HOMEWORK 2.1 SAMPLE OUTPUT
+==========================
+
+MS147V:bin tgrushka$ ./multiples
+Enter an integer greater than zero: 15
+
+Counting to 15 by multiples of 5:
+    0 * 5 =       0
+    1 * 5 =       5
+    2 * 5 =      10
+    3 * 5 =      15
+MS147V:bin tgrushka$ ./multiples
+Enter an integer greater than zero: 47
+
+Counting to 47 by multiples of 5:
+    0 * 5 =       0
+    1 * 5 =       5
+    2 * 5 =      10
+    3 * 5 =      15
+    4 * 5 =      20
+    5 * 5 =      25
+    6 * 5 =      30
+    7 * 5 =      35
+    8 * 5 =      40
+    9 * 5 =      45
+I cannot reach 47 because it is not a multiple of 5.
+MS147V:bin tgrushka$ 
+
+
+HOMEWORK 2.2 SAMPLE OUTPUT
+==========================
+
+MS147V:bin tgrushka$ ./lowpower
+Good afternoon, Dave. I am a HAL 9000 computer. I am afraid my power needs adjusting.
+Please specify a new voltage and resistance, Dave.
+I cannot handle more than 0.25 Watts of power, Dave.
+Voltage: 5
+Resistance: 1
+Power limit exceeded! I'm sorry, Dave. I'm afraid I can't do that.
+
+Please specify a new voltage and resistance, Dave.
+I cannot handle more than 0.25 Watts of power, Dave.
+Voltage: 5
+Resistance: 2
+Power limit exceeded! I think you know what the problem is just as well as I do.
+
+Please specify a new voltage and resistance, Dave.
+I cannot handle more than 0.25 Watts of power, Dave.
+Voltage: 7.3
+Resistance: 253.7
+
+Very good, Dave. That will be 0.21 Watts of power. Have a nice day!
+MS147V:bin tgrushka$ 
+
+
+
+
+
+HOMEWORK 2.3 SAMPLE OUTPUT
+==========================
+
+MS147V:bin tgrushka$ ./factor
+Enter a positive integer: 592314
+Check for Prime Numbers? 1
+Print What (0 = Only Factors, 1 = All Numbers, 2 = Factors + Primes) ?0
+Square Root (rounded down): 770
+
+Number                          Prime  Other Factor
+==============================  =====  ==============================
+                             1                                 592314
+                             2      Y                          296157
+                             3      Y                          197438
+                             6                                  98719
+                            17      Y                           34842
+                            34                                  17421
+                            51                                  11614
+                           102                                   5807
+
+Execution time: 0.000087 s
+
+MS147V:bin tgrushka$ 

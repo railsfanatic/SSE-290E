@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 	printf("Square Root (rounded down): %lld\n\n", sqroot);
 
 	// print header:
-	printf("Number                          Prime  Multiplier\n");
+	printf("Number                          Prime  Other Factor\n");
 	printf("==============================  =====  ==============================\n");
 
 	begin = clock();	// store start time in order to time execution
