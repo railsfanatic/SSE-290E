@@ -1,8 +1,17 @@
-SRCS = $(wildcard *.c)
+#	$@	file name of the target of the rule
+#	$<	name of first prerequisite
+#	$^	names of ALL prerequisites with spaces between them
+#	$?	names of all NEWER prerequisites
 
-PROGS = $(patsubst %.c,%,$(SRCS))
+SRCS = $(wildcard *.c)
+BIN=./bin/
+
+PROGS = $(patsubst %.c,$(BIN)%,$(SRCS))
 
 all: $(PROGS)
 
-%: %.c
-	$(CC) $(CFLAGS)  -o bin/$@ $<
+$(BIN)%: %.c
+	$(CC) $(CFLAGS) -o $@ $?
+
+clean:
+	$(RM) bin/*
