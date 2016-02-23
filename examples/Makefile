@@ -8,11 +8,14 @@ BIN=./bin/
 
 PROGS = $(patsubst %.c,$(BIN)%,$(SRCS))
 
-all: $(PROGS)
+all: bin $(PROGS)
 
 $(BIN)%: %.c
 	$(CC) $(CFLAGS) -o $@ $?
 #	./$@
+
+bin:
+	mkdir $@
 
 clean:
 	$(RM) bin/*
