@@ -1,0 +1,14 @@
+/* 
+#include <stdio.h>
+
+int main()
+{
+	int x = 0;
+	scanf("Hello %d", &x);
+}
+
+runtime - only happens during run
+	syntax - most common type
+		logic - e.g. checking condition twice
+			fatal - infinite loop
+*/

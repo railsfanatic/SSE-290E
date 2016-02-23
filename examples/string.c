@@ -3,6 +3,19 @@
 
 int main()
 {
+	char str1[64] = "Life is Beautiful ";
+	char str2[32] = "World is a good place to live";
+	printf("%s\n", strcat(str1, str2));
+	
+	strcpy(str1, str2);
+	
+	printf("%s\n", str1);
+	
+	return 0;
+}
+
+int main2()
+{
 	char string1[32];
 	char string2[32];
 	char op[2];

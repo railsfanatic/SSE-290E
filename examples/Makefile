@@ -12,6 +12,7 @@ all: $(PROGS)
 
 $(BIN)%: %.c
 	$(CC) $(CFLAGS) -o $@ $?
+#	./$@
 
 clean:
 	$(RM) bin/*
