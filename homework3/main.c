@@ -2,6 +2,8 @@
 
 #include "funcs.h"
 
+const int ARRAY_SIZE = 10;
+
 int main(int argc, char **argv)
 {
 	int choice = 0;
@@ -27,6 +29,9 @@ int main(int argc, char **argv)
 	{
 		case 1:
 			printf("SMALLEST RANDOM NUMBER\n\n");
+			int data[ARRAY_SIZE];
+			fillRandom(ARRAY_SIZE, data);
+			printArray(ARRAY_SIZE, data);
 			break;
 		default:
 			printf("Goodbye!\n\n");
