@@ -1,3 +1,3 @@
 all:
-	gcc -o bin/homework3 main.c
+	gcc -o bin/homework3 main.c funcs.c
 	
