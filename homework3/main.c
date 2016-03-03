@@ -2,7 +2,7 @@
 
 #include "funcs.h"
 
-const int ARRAY_SIZE = 10;
+const int ARRAY_SIZE = 1000000;
 
 int main(int argc, char **argv)
 {
@@ -31,7 +31,14 @@ int main(int argc, char **argv)
 			printf("SMALLEST RANDOM NUMBER\n\n");
 			int data[ARRAY_SIZE];
 			fillRandom(ARRAY_SIZE, data);
-			printArray(ARRAY_SIZE, data);
+			//printf("The array is: \n");
+			//printArray(ARRAY_SIZE, data);
+			printf("\n");
+			int i = findLowest(ARRAY_SIZE, data);
+			printf("The lowest value is [%d] = %d.\n", i, data[i]);
+			mergeSort(ARRAY_SIZE, data);
+			printf("Sorted array:\n");
+			//printArray(ARRAY_SIZE, data);
 			break;
 		default:
 			printf("Goodbye!\n\n");
