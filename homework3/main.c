@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-#include "funcs.h"
+#include "common_funcs.h"
+#include "smallestRandomNumber.h"
 
 const int ARRAY_SIZE = 1000000;
 
@@ -20,7 +21,7 @@ int main(int argc, char **argv)
 		"8.  Factorial\n\n"
 		"9.  Average with Upper Limit\n\n\n"
 		
-		"Please enter a number (1-9, other to quit). ");
+		"Please enter a number (1-9, 0 to quit). ");
 	
 	scanf(" %d", &choice);
 	printf("\n\n");
@@ -29,16 +30,7 @@ int main(int argc, char **argv)
 	{
 		case 1:
 			printf("SMALLEST RANDOM NUMBER\n\n");
-			int data[ARRAY_SIZE];
-			fillRandom(ARRAY_SIZE, data);
-			//printf("The array is: \n");
-			//printArray(ARRAY_SIZE, data);
-			printf("\n");
-			int i = findLowest(ARRAY_SIZE, data);
-			printf("The lowest value is [%d] = %d.\n", i, data[i]);
-			mergeSort(ARRAY_SIZE, data);
-			printf("Sorted array:\n");
-			//printArray(ARRAY_SIZE, data);
+			//runSmallestRandomNumber();
 			break;
 		default:
 			printf("Goodbye!\n\n");

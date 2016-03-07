@@ -1,5 +1,5 @@
-#ifndef FUNCS_H_
-#define FUNCS_H_
+#ifndef COMMON_FUNCS_H_
+#define COMMON_FUNCS_H_
 
 void fillRandom(int size, int *array);
 void printArray(int size, int *array);
@@ -11,4 +11,4 @@ void topDownMerge(int *a, int iBegin, int iMiddle, int iEnd, int *b);
 void copyArray(int *b, int iBegin, int iEnd, int *a);
 */
 
-#endif // FUNCS_H_
+#endif // COMMON_FUNCS_H_

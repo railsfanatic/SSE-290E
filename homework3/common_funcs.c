@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#include "funcs.h"
+#include "common_funcs.h"
 
 void fillRandom(int size, int *array)
 {
@@ -38,9 +38,14 @@ void bubbleSort(int size, int *a)
 {
 	int i = 0;
 	int j = 0;
+	int temp = 0;
 	for (i = 0; i < size; i++)
 	{
-		if (a[i] > a[i+1])
+		if (a[i] > a[i+1]) {
+			temp = a[i];
+			a[i] = a[i+1];
+			a[i+1] = temp;
+		}
 	}
 }
 
