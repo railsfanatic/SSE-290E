@@ -1,6 +1,7 @@
 #ifndef COMMON_FUNCS_H_
 #define COMMON_FUNCS_H_
 
+void reverseArray(int size, int *array);
 void fillRandom(int size, int *array);
 void printArray(int size, int *array);
 int findLowest(int size, int *array);

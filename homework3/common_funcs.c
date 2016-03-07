@@ -2,7 +2,13 @@
 #include <time.h>
 #include <stdlib.h>
 
-#include "common_funcs.h"
+void reverseArray(int size, int *a)
+{
+	int i = 0;
+	int b[size];
+	for (i = 0; i < size; i++) b[size - i] = a[i];
+	a = b;
+}
 
 void fillRandom(int size, int *array)
 {

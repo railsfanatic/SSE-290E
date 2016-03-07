@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	{
 		case 1:
 			printf("SMALLEST RANDOM NUMBER\n\n");
-			//runSmallestRandomNumber();
+			runSmallestRandomNumber();
 			break;
 		default:
 			printf("Goodbye!\n\n");
