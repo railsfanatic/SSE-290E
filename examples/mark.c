@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
+// this is a test
+
 int main(int argc, const char *argv[])
 {
 	char *grade;
