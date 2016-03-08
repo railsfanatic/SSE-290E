@@ -3,7 +3,7 @@
 #define COMMON_H_
 
 void reverseArray(int size, int *array);
-void fillRandom(int size, int *array);
+void fillRandom(int size, int *array, int min, int max);
 void printArray(int size, int *array);
 int findLowest(int size, int *array);
 void mergeSort(int size, int *array);

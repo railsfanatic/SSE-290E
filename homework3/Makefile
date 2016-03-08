@@ -1,3 +1,3 @@
 all:
-	gcc -o bin/homework3 $(wildcard *.c)
+	cc -o bin/homework3 $(wildcard *.c)
 	

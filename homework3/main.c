@@ -4,6 +4,9 @@
 #include "common.h"
 #include "menu.h"
 #include "smallestRandomNumber.h"
+#include "randomAndReverse.h"
+#include "hypotenuse.h"
+#include "factorial.h"
 
 int main(int argc, char **argv)
 {
@@ -34,8 +37,28 @@ int main(int argc, char **argv)
 				runSmallestRandomNumber();
 				break;
 			case 2:
-				printf("RANDOM AND REVERSE\n\n");
-				//runRandomAndReverse();
+				runRandomAndReverse();
+				break;
+			case 3:
+				//runFindAdjacentMatch();
+				break;
+			case 4:
+				//runGuessThePassword();
+				break;
+			case 5:
+				//runCountTheVowels();
+				break;
+			case 6:
+				//runPalindrome();
+				break;
+			case 7:
+				runHypotenuse();
+				break;
+			case 8:
+				runFactorial();
+				break;
+			case 9:
+				//runAverageWithUpperLimit();
 				break;
 			default:
 				printf("Goodbye!\n\n");

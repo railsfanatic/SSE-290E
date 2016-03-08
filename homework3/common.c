@@ -4,19 +4,22 @@
 
 void reverseArray(int size, int *a)
 {
-	int i = 0;
-	int b[size];
-	for (i = 0; i < size; i++) b[size-i-1] = a[i];
-	for (i = 0; i < size; i++) a[i] = b[i];
+	int i = 0, j = size;
+	for (i = 0; i < size / 2; i++) {
+		j = size - i - 1;
+		a[i] = a[i] ^ a[j];
+		a[j] = a[i] ^ a[j];
+		a[i] = a[i] ^ a[j];
+	}
 }
 
-void fillRandom(int size, int *array)
+void fillRandom(int size, int *array, int min, int max)
 {
 	int i = 0;
 	srand(time(NULL));
 	for (i = 0; i < size; i++)
 	{
-		array[i] = rand() % 100;
+		array[i] = rand() % (max - min) + min;
 	}
 }
 
@@ -25,7 +28,8 @@ void printArray(int size, int *array)
 	int i = 0;
 	for (i = 0; i < size; i++)
 	{
-		printf("[%d]\t%d\n", i, array[i]);
+		printf("[%2d]  %4d     ", i, array[i]);
+		if (i % 5 == 4) printf("\n");
 	}
 	printf("\n");
 }
