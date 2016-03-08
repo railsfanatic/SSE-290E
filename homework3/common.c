@@ -6,8 +6,8 @@ void reverseArray(int size, int *a)
 {
 	int i = 0;
 	int b[size];
-	for (i = 0; i < size; i++) b[size - i] = a[i];
-	a = b;
+	for (i = 0; i < size; i++) b[size-i-1] = a[i];
+	for (i = 0; i < size; i++) a[i] = b[i];
 }
 
 void fillRandom(int size, int *array)
@@ -16,7 +16,7 @@ void fillRandom(int size, int *array)
 	srand(time(NULL));
 	for (i = 0; i < size; i++)
 	{
-		array[i] = rand();
+		array[i] = rand() % 100;
 	}
 }
 
@@ -27,6 +27,7 @@ void printArray(int size, int *array)
 	{
 		printf("[%d]\t%d\n", i, array[i]);
 	}
+	printf("\n");
 }
 
 int findLowest(int size, int *array)

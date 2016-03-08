@@ -1,5 +1,6 @@
-#ifndef COMMON_FUNCS_H_
-#define COMMON_FUNCS_H_
+#ifndef COMMON_H_
+#define ARRAY_SIZE 10
+#define COMMON_H_
 
 void reverseArray(int size, int *array);
 void fillRandom(int size, int *array);
@@ -12,4 +13,4 @@ void topDownMerge(int *a, int iBegin, int iMiddle, int iEnd, int *b);
 void copyArray(int *b, int iBegin, int iEnd, int *a);
 */
 
-#endif // COMMON_FUNCS_H_
+#endif // COMMON_H_
