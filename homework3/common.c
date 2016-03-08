@@ -2,10 +2,21 @@
 #include <time.h>
 #include <stdlib.h>
 
+void inputArray(int size, int *a)
+{
+	int i = 0;
+	for (i = 0; i < size; i++)
+	{
+		printf("[%3d]  ", i);
+		scanf(" %d", &a[i]);
+	}
+}
+
 void reverseArray(int size, int *a)
 {
 	int i = 0, j = size;
-	for (i = 0; i < size / 2; i++) {
+	for (i = 0; i < size / 2; i++)
+	{
 		j = size - i - 1;
 		a[i] = a[i] ^ a[j];
 		a[j] = a[i] ^ a[j];

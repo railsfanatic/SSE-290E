@@ -1,9 +1,11 @@
 #ifndef COMMON_H_
-#define ARRAY_SIZE 10
 #define COMMON_H_
+
+#define ARRAY_SIZE 10
 
 void reverseArray(int size, int *array);
 void fillRandom(int size, int *array, int min, int max);
+void inputArray(int size, int *array);
 void printArray(int size, int *array);
 int findLowest(int size, int *array);
 void mergeSort(int size, int *array);

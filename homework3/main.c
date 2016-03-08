@@ -5,6 +5,9 @@
 #include "menu.h"
 #include "smallestRandomNumber.h"
 #include "randomAndReverse.h"
+#include "findAdjacentMatch.h"
+
+#include "palindrome.h"
 #include "hypotenuse.h"
 #include "factorial.h"
 
@@ -40,7 +43,7 @@ int main(int argc, char **argv)
 				runRandomAndReverse();
 				break;
 			case 3:
-				//runFindAdjacentMatch();
+				runFindAdjacentMatch();
 				break;
 			case 4:
 				//runGuessThePassword();
