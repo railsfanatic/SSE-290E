@@ -20,7 +20,7 @@ int runFindAdjacentMatch() {
 		if(a[i-1] == a[i])
 		{
 			matchIndex = i - 1;
-			printf("Found at least two elements match at [%d] = %d.\n", matchIndex, a[matchIndex]);
+			printf("Found at least two elements match starting at index [%d] = %d.\n", matchIndex, a[matchIndex]);
 			break;
 		}
 	}

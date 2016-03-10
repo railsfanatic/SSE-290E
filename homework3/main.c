@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 				//runCountTheVowels();
 				break;
 			case 6:
-				//runPalindrome();
+				runPalindrome();
 				break;
 			case 7:
 				runHypotenuse();
