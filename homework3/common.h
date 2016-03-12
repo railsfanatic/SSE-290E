@@ -3,12 +3,16 @@
 
 #define ARRAY_SIZE 10
 
-void reverseArray(int size, int *array);
-void fillRandom(int size, int *array, int min, int max);
-void inputArray(int size, int *array);
-void printArray(int size, int *array);
-int findLowest(int size, int *array);
-void mergeSort(int size, int *array);
+char *getString(int length, const char *prompt);
+int getInteger(const char *prompt);
+char *strrev(char *str);
+
+void reverseArray(int size, int *a);
+void   fillRandom(int size, int *a, int min, int max);
+void   inputArray(int size, int *a);
+void   printArray(int size, int *a);
+int    findLowest(int size, int *a);
+void    mergeSort(int size, int *a);
 /*
 void splitMerge(int *a, int iBegin, int iEnd, int *b);
 void topDownMerge(int *a, int iBegin, int iMiddle, int iEnd, int *b);

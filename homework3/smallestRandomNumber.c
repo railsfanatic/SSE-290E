@@ -2,11 +2,11 @@
 #include "common.h"
 
 int runSmallestRandomNumber() {
-	printf("SMALLEST RANDOM NUMBER\n\n");
+	printf("1. SMALLEST RANDOM NUMBER\n\n");
 	printf("Fills an array with random integers and then finds the\n"
 		"position of the smallest element in the array. Prints the\n"
 		"value of the smallest number.\n\n");
-	int a[ARRAY_SIZE];
+	int a[ARRAY_SIZE] = {0};
 	int index = 0;
 	fillRandom(ARRAY_SIZE, a, -1000, 1000);
 	printArray(ARRAY_SIZE, a);

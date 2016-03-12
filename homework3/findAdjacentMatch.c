@@ -3,10 +3,10 @@
 
 int runFindAdjacentMatch() {
 	int matchIndex = -1;
-	int a[ARRAY_SIZE];
+	int a[ARRAY_SIZE] = {0};
 	int i = 0;
 	
-	printf("FIND ADJACENT MATCH\n\n");
+	printf("3. FIND ADJACENT MATCH\n\n");
 	printf("Allows you to enter values into an array. Finds the first pair of\n"
 		"adjacent elements that are the same. Prints out the value of the identical\n"
 		"elements and the position of the first element that is a match.\n\n");
@@ -20,7 +20,7 @@ int runFindAdjacentMatch() {
 		if(a[i-1] == a[i])
 		{
 			matchIndex = i - 1;
-			printf("Found at least two elements match starting at index [%d] = %d.\n", matchIndex, a[matchIndex]);
+			printf("Found at least two elements matching at index [%d] = %d.\n", matchIndex, a[matchIndex]);
 			break;
 		}
 	}

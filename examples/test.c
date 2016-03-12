@@ -1,20 +1,14 @@
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
-int operation(int m, int n)
-{
- int temp=0;
- temp =m;
- m=n;
- n=temp;
- temp=pow(m,2)+pow(n,3);
- return temp;
-}
-
-int main()
-{
-	int a=3;
-	 int b=5;
-	 printf("%d\n",operation(a,b));
+int main() {
+	// your code goes here
+	int a[255] = {};
+	a[0] = 17;
+	a[1] = 5;
+	a[2] = 8;
+	a[3] = 7;
+	printf("size: %lu\n", sizeof(a)/sizeof(a[0]));
 	return 0;
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include "common.h"
 
 float hypotenuse(float a, float b)
 {
@@ -10,15 +11,13 @@ void runHypotenuse()
 {
 	float a = 0, b = 0, c = 0;
 	
-	printf("HYPOTENUSE\n\n");
+	printf("7. HYPOTENUSE\n\n");
 	printf("Function that calculates the floating-point hypotenuse\n"
 		"of a right triangle given the two legs: c^2 = a^2 + b^2.\n\n");
 	
-	printf("Please enter side A: ");
-	scanf(" %f", &a);
+	a = getInteger("Please enter side A: ");
 	
-	printf("Please enter side B: ");
-	scanf(" %f", &b);
+	b = getInteger("Please enter side B: ");
 	
 	c = hypotenuse(a, b);
 	
