@@ -27,15 +27,15 @@
 #include "common.h"
 
 // include modules for 9 parts of homework 
-#include "smallestRandomNumber.h"
-#include "randomReverse.h"
-#include "findAdjacentMatch.h"
-#include "password.h"
-#include "countVowels.h"
-#include "averageUL.h"
-#include "palindrome.h"
-#include "hypotenuse.h"
-#include "factorial.h"
+#include "smallestRandomNumber.h"	// 3.1
+#include "randomReverse.h"			// 3.2
+#include "findAdjacentMatch.h"		// 3.3
+#include "password.h"				// 3.4
+#include "countVowels.h"			// 3.5
+#include "palindrome.h"				// 3.6
+#include "hypotenuse.h"				// 3.7
+#include "factorial.h"				// 3.8
+#include "averageUL.h"				// 3.9
 
 // print the menu
 void printMenu()
