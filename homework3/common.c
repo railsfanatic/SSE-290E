@@ -290,6 +290,3 @@ void mergeSort(int size, int *a)
 	int work[size];	// temporary "work" array
 	splitMerge(a, 0, size, work);
 }
-
-
-
