@@ -14,7 +14,7 @@ float hypotenuse(float a, float b)
 	return sqrt(pow(a, 2) + pow(b, 2));
 }
 
-void runHypotenuse()
+int runHypotenuse()
 {
 	// declarations
 	float a = 0, b = 0, c = 0;	// legs a, b, and c of triangle
@@ -35,4 +35,6 @@ void runHypotenuse()
 	
 	// print hypotenuse
 	printf("The hypotenuse is %f.\n", c);
+	
+	return 0;
 }

@@ -3,6 +3,20 @@
 	Module:	Homework 3 MAIN PROGRAM & Menu
 	by Tom Grushka
 	Mar. 11, 2016
+	
+	NOTE: HOMEWORK 3 is set up as a single large
+	program with a menu for selection and "module"
+	for each of the 1-9 problems.
+	
+	Each "module" could easily be made its own
+	program by redefining its run(ModuleName)
+	function to main() and compiling it separately.
+	
+	Example:
+		1. In hypotenuse.c and hypotenuse.h, change:
+			int runHypotenuse() to int main()
+		2. Execute:
+			cc hypotenuse.c common.c -o hypotenuse
 */
 
 #include <stdio.h>

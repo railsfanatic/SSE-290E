@@ -26,7 +26,7 @@ long long factorial(int n)
 	return fact;
 }
 
-void runFactorial()
+int runFactorial()
 {
 	int n = 0;	// store the number to factorial
 	
@@ -41,4 +41,6 @@ void runFactorial()
 	
 	// print the factorial of n
 	printf("The factorial is %lld.\n", factorial(n));
+	
+	return 0;
 }
