@@ -1,6 +1,19 @@
+/*	HOMEWORK 3
+	File:	averageUL.c
+	Module:	Homework 3.9: Average Upper Limit
+	by Tom Grushka
+	Mar. 11, 2016
+*/
+
 #include <stdio.h>
 #include "common.h"
 
+/*	averageUL:	calculates the average of numbers at
+	or below an upper limit
+		inputs:	size (int) = size of the array
+				a[size] (int) = array of integers
+				limit (int) = the upper limit
+		returns:	(double) average */
 double averageUL(int size, int *a, int limit)
 {
 	int i = 0;	// loop counter
@@ -17,7 +30,7 @@ double averageUL(int size, int *a, int limit)
 	if (n > 0) average /= n;	/* set average;
 		simply avoid divide-by-zero if no elements found  */
 	
-	return average;
+	return average;	// return the result
 }
 
 int runAverageWithUpperLimit()

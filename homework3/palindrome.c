@@ -1,3 +1,10 @@
+/*	HOMEWORK 3
+	File:	palindrome.c
+	Module:	Homework 3.6: Palindrome
+	by Tom Grushka
+	Mar. 11, 2016
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -46,17 +53,29 @@ int isPalindrome(char *p)
 
 /*	runPalindrome:	palindrome checker subroutine	*/
 int runPalindrome() {
-	char *p = (char *)malloc(255);
+	// declarations
+	char *p;	// pointer to start of user string
+	char *t;	// pointer to start of test string
+	char *is_isnot;	// display string for is/is not
 	
+	// print banner
 	printf("6. PALINDROME\n\n");
 	printf("Prompts you for a string and then tests to see if it is a palindrome.\n"
 		"Prints a message based on the results. (A palindrome is a word or\n"
 		"phrase that is spelled the same forwards as backwards.\n"
 		"For example \"racecar\" is a palindrome.)\n\n");
 	
+	// get user string
 	p = getString(255, "");
 	
-	printf("The string:\n\n\t%s\n\t(%s)\n\n%s a palindrome.\n", p, strAlphaNumericLower(p), (isPalindrome(p) ? "IS" : "IS NOT"));
+	// set test string
+	t = strAlphaNumericLower(p);
+	
+	// set display string for is or is not
+	is_isnot = isPalindrome(p) ? "IS" : "is NOT";
+	
+	// print output
+	printf("The string:\n\n\t%s\n\t(%s)\n\n%s a palindrome.\n", p, t, is_isnot);
 	
 	return 0;
 }

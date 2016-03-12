@@ -1,18 +1,29 @@
+/*	HOMEWORK 3
+	File:	main.c
+	Module:	Homework 3 MAIN PROGRAM & Menu
+	by Tom Grushka
+	Mar. 11, 2016
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+// include header for common functions
 #include "common.h"
+
+// include modules for 9 parts of homework 
 #include "smallestRandomNumber.h"
-#include "randomAndReverse.h"
+#include "randomReverse.h"
 #include "findAdjacentMatch.h"
-#include "guessPassword.h"
+#include "password.h"
 #include "countVowels.h"
 #include "averageUL.h"
 #include "palindrome.h"
 #include "hypotenuse.h"
 #include "factorial.h"
 
+// print the menu
 void printMenu()
 {
 	printf("\n\nHOMEWORK 3\n==========\n\n"
@@ -27,36 +38,51 @@ void printMenu()
 		"9.  Average with Upper Limit\n\n");
 }
 
+/*	main program:
+		if argument passed:
+			run corresponding module and quits;
+		else:
+			print menu;
+			input choice from user;
+			run corresponding module;
+			repeat
+*/
 int main(int argc, char **argv)
 {
-	int choice = 0;
-	int quit = 0;
+	// declarations
+	int choice = 0;		// user selection
+	int quit = 0;		// flag whether to stop looping
 	
 	do {
+		// check if argument passed
 		if (argc == 2 && argv[1])
 		{
+			// if -h or --help, print menu and quit
 			if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)
 			{
 				printMenu();
 				break;
 			}
+			// set user choice and quit flag, then proceed to switch
 			choice = atoi(argv[1]);
 			quit = 1;
 		}
-		else
+		else	// no argument
 		{
+			// print menu, input choice, proceed to switch
 			printMenu();
 			choice = getInteger("Please enter a number (1-9, 0 to quit). ");
 			printf("\n\n");
 		}
 		
+		// execute user selected program
 		switch(choice)
 		{
 			case 1:
 				runSmallestRandomNumber();
 				break;
 			case 2:
-				runRandomAndReverse();
+				runRandomReverse();
 				break;
 			case 3:
 				runFindAdjacentMatch();
@@ -82,11 +108,12 @@ int main(int argc, char **argv)
 			default:
 				printf("Goodbye!\n\n");
 				quit = 1;
-				exit(0);
 				break;
 		}
 		
-		getString(1, "\nPress Enter/Return to continue. ");
-	} while (quit == 0);
+		// only prompt user to continue if not quitting
+		if (!quit) getString(1, "\nPress Enter/Return to continue. ");
+	} while (quit == 0);  // loop while not quitting
+	
 	return 0;
 }

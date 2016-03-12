@@ -1,3 +1,10 @@
+/*	HOMEWORK 3
+	File:	common.h
+	Module:	Common functions for Homework 3
+	by Tom Grushka
+	Mar. 11, 2016
+*/
+
 #ifndef COMMON_H_
 #define COMMON_H_
 
