@@ -6,7 +6,11 @@
 */
 
 #include <stdio.h>
-#include <unistd.h>
+
+#if defined(POSIX) // getpass function to hide password entry
+#include <unistd.h> // not available on Windows
+#endif
+
 #include <string.h>
 
 #include "common.h"
@@ -36,8 +40,12 @@ int runGuessPassword()
 	
 	// start loop to enter/check password
 	do {
-		// hide input using getpass() from unistd library
-		pass = getpass("Please enter the password. ");
+		#if defined(POSIX)
+			// hide input using getpass() from unistd library
+			pass = getpass("Please enter the password. ");
+		#else
+			pass = getString(30, "Please enter the password. ");
+		#endif
 		
 		// compare entered pass with PASSWORD constant
 		correct = authPassword(pass);

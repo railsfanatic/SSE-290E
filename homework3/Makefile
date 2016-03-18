@@ -4,4 +4,4 @@
 #	Mar. 11, 2016
 
 all:
-	cc -o bin/homework3 $(wildcard *.c)
+	cc -Wall -o bin/homework3 $(wildcard *.c)

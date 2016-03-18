@@ -36,7 +36,6 @@ int runFindAdjacentMatch() {
 	// declarations
 	int matchIndex = -1;	// first index of adjacent match
 	int a[ARRAY_SIZE] = {0};	// array of integers
-	int i = 0;					// loop counter
 	
 	// print banner
 	printf("3. FIND ADJACENT MATCH\n\n");
