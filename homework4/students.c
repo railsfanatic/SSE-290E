@@ -648,7 +648,7 @@ int main()
 	int choice = 0;	// store user selection
 	int quit = 0;	// flag to end program
 	
-	// print the menu
+	// print the menu, loop until user quits
 	do {
 		printf("\n\nWelcome to STUDENTS!\n===================\n\n"
 			"There are currently %d students in memory.\n\n"
@@ -684,7 +684,7 @@ int main()
 				if (numStudents == 0 || confirm("LOAD file and LOSE all students in memory (y/n) ? "))
 					loadStudents();
 				break;
-			case 6: // save
+			case 6: // save (only if students[] is not empty)
 				if (numStudents == 0) printf("There are no students to save yet!\n");
 				else if (confirm("OVERWRITE the file (y/n) ? "))
 					saveStudents();
