@@ -5,6 +5,7 @@
 
 SRCS = $(wildcard *.c)
 BIN=./bin/
+CFLAGS=-Wall
 
 PROGS = $(patsubst %.c,$(BIN)%,$(SRCS))
 

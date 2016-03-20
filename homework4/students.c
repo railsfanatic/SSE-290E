@@ -21,10 +21,10 @@ struct STUDENT
 	char firstName[32];
 	char lastName[32];
 	int completedCredits;
-	struct tm enrollmentDate;
+	time_t enrollmentDate;
 };
 
-struct STUDENT students[100];
+struct STUDENT students[MAX_STUDENTS];
 int numStudents = 0;
 
 int saveStudents()
@@ -44,7 +44,7 @@ int saveStudents()
 	for (i = 0; i < numStudents; i++)
 	{
 		fwrite(&students[i], sizeof(struct STUDENT), 1, file);
-		printf("%d\t", i);
+		printf("%d  ", i);
 	}
 	
 	fclose(file);
@@ -68,7 +68,7 @@ int loadStudents()
 	for (i = 0; i < numStudents; i++)
 	{
 		fread(&students[i], sizeof(struct STUDENT), 1, file);
-		printf("%d\t", i);
+		printf("%d  ", i);
 	}
 	
 	fclose(file);
@@ -121,7 +121,7 @@ char *inputString(const char *prompt, size_t size)
 	return in;
 }
 
-struct tm inputDate(const char *prompt)
+time_t inputDate(const char *prompt)
 {
 	int m = 0;
 	int d = 0;
@@ -132,7 +132,7 @@ struct tm inputDate(const char *prompt)
 	do
 	{
 		strcpy(tempDate, inputString(prompt, 10));
-		if (strcmp(tempDate, "") == 0) return date;
+		if (strcmp(tempDate, "") == 0) return mktime(&date);
 		
 		sscanf(tempDate, "%d/%d/%d", &m, &d, &y);
 		if (y < 100 && y >= 30) y += 1900;
@@ -144,9 +144,8 @@ struct tm inputDate(const char *prompt)
 	date.tm_mon = m - 1;
 	date.tm_mday = d;
 	date.tm_year = y - 1900;
-	mktime(&date);
 	
-	return date;
+	return mktime(&date);
 }
 
 int inputInteger(const char *prompt)
@@ -156,7 +155,7 @@ int inputInteger(const char *prompt)
 
 int confirm(const char *prompt)
 {
-	char *conf = inputString(prompt, 100);
+	char *conf = inputString(prompt, 2);
 	if (strcmp(conf, "y") == 0 || strcmp(conf, "Y") == 0) return 1;
 	else return 0;
 }
@@ -166,7 +165,7 @@ void addStudents()
 	char firstName[32];
 	char lastName[32];
 	int completedCredits;
-	struct tm enrollmentDate;
+	time_t enrollmentDate;
 	struct STUDENT *s;
 	
 	printf("Add Students\n============\n\n"
@@ -193,7 +192,7 @@ void addStudents()
 					firstName,
 					lastName,
 					completedCredits,
-					asctime(&enrollmentDate));
+					ctime(&enrollmentDate));
 		} while (!confirm("Info correct (y/n) ?"));
 		
 		s = &students[numStudents];
@@ -208,10 +207,10 @@ void addStudents()
 	} while (confirm("Add another student (y/n) ?"));
 }
 
-char *formatDate(struct tm d)
+char *formatDate(time_t d)
 {
 	char *s = malloc(10 * sizeof(char));
-	strftime(s, 10, "%m/%d/%Y", &d);
+	strftime(s, 10, "%m/%d/%Y", localtime(&d));
 	return s;
 }
 
@@ -237,8 +236,8 @@ void editStudent(struct STUDENT *s)
 	char firstName[32];
 	char lastName[32];
 	int completedCredits;
-	struct tm enrollmentDate = {0};
-	struct tm noDate = {0};
+	time_t enrollmentDate = 0;
+	time_t noDate = 0;
 	
 	do {
 		printf("\nEditing Student #%d\n", numStudents + 1);
@@ -257,7 +256,7 @@ void editStudent(struct STUDENT *s)
 		
 		printf("Enrollment date (mm/dd/yyyy): [%s] ", formatDate(s->enrollmentDate));
 		enrollmentDate = inputDate("");
-		if (difftime(mktime(&enrollmentDate), mktime(&noDate)) == 0) enrollmentDate = s->enrollmentDate;
+		if (difftime(enrollmentDate, noDate) == 0) enrollmentDate = s->enrollmentDate;
 		
 		printf("\nFirst name: %s\n"
 			"Last name: %s\n"
@@ -266,7 +265,7 @@ void editStudent(struct STUDENT *s)
 				firstName,
 				lastName,
 				completedCredits,
-				asctime(&enrollmentDate));
+				ctime(&enrollmentDate));
 	} while (!confirm("\nInfo correct (y/n) ?"));
 	
 	strcpy(s->firstName, firstName);
@@ -305,7 +304,7 @@ void listStudents()
 
 void sortStudents()
 {
-	char *sortField;
+	char sortField;
 	int i = 0;
 	int sorted = 0;
 	int swap = 0;
@@ -321,8 +320,7 @@ void sortStudents()
 		"E) Enrollment Date\n\t\t"
 		"C) Completed Credits ? ");
 	
-	sortField = inputString("", 2);
-	*sortField = toupper(*sortField);
+	sortField = toupper(inputString("", 2)[0]);
 	
 	while (!sorted)
 	{
@@ -330,7 +328,7 @@ void sortStudents()
 		for (i = 0; i < numStudents - 1; i++)
 		{
 			swap = 0;
-			switch (*sortField)
+			switch (sortField)
 			{
 				case 'F': // first name
 					swap = ((strcmp(students[i+1].firstName, students[i].firstName) < 0)
@@ -338,8 +336,8 @@ void sortStudents()
 						&& strcmp(students[i+1].lastName, students[i].lastName) < 0));
 					break;
 				case 'E': // enrollment date
-					t1 = mktime(&students[i].enrollmentDate);
-					t2 = mktime(&students[i+1].enrollmentDate);
+					t1 = students[i].enrollmentDate;
+					t2 = students[i+1].enrollmentDate;
 					swap = (difftime(t1, t2));
 					break;
 				case 'C': // completed credits
@@ -363,6 +361,54 @@ void sortStudents()
 	}
 }
 
+char *downcase(char *s)
+{
+	char *d = (char *)malloc(strlen(s) * sizeof(char));
+	d = strdup(s);
+	char *p = d;
+	for ( ; *d; ++d) *d = tolower(*d);
+	return p;
+}
+
+void findStudent()
+{
+	int i = 0;
+	char *findLastName;
+	char *lastName;
+	int found[MAX_STUDENTS];
+	int numFound = 0;
+	int findAnother = 0;
+	
+	printf("FIND STUDENT BY LAST NAME\n\n");
+	
+	do {
+		numFound = 0;
+		
+		findLastName = downcase(inputString("Last name? ", 32));
+		printf("\n\nSearching ... ");
+		for (i = 0; i < numStudents; i++)
+		{
+			lastName = downcase(students[i].lastName);
+			if (strstr(lastName, findLastName) != NULL)
+			{
+				found[numFound] = i;
+				numFound ++;
+			}
+		}
+		if (numFound == 0) printf("No matches found.\n");
+		else
+		{
+			printf("Found %d students:\n\n", numFound);
+			for (i = 0; i < numFound; i++)
+			{
+				printStudent(&students[found[i]]);
+				printf("\n");
+			}
+		}
+		
+	} while (confirm("Find another (y/n) ? "));
+}
+
 int main()
 {
 	int choice = 0;
@@ -371,7 +417,7 @@ int main()
 		printf("\n\nWelcome to STUDENTS!\n===================\n\n"
 			"There are currently %d students in memory.\n\n"
 			"1.  Add New Student(s)\n\n"
-			"2.  Find Students\n\n"
+			"2.  Find Student by Last Name\n\n"
 			"3.  List All Students\n\n"
 			"4.  Sort Database\n\n"
 			"5.  Load Students File (./students.dat)\n\n"
@@ -387,7 +433,7 @@ int main()
 				addStudents();
 				break;
 			case 2: // find
-				//findStudent();
+				findStudent();
 				break;
 			case 3: // list
 				listStudents();
@@ -400,7 +446,8 @@ int main()
 					loadStudents();
 				break;
 			case 6: // save
-				if (confirm("Overwrite the file (y/n) ? "))
+				if (numStudents == 0) printf("There are no students to save yet!\n");
+				else if (confirm("Overwrite the file (y/n) ? "))
 					saveStudents();
 				break;
 			default: // quit
@@ -415,4 +462,5 @@ int main()
 	
 	return 0;
 }
+
 
