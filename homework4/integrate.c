@@ -1,3 +1,16 @@
+/*	HOMEWORK 4.2
+	Filename: integrate.c
+	Description: Allows user to enter up to NUM_POINTS
+		of (time, acceleration) pairs
+		(units: seconds, m/s^2)
+		into an array of structs, then integrates using
+		the trapezoidal rule to get the final velocity.
+		Assumes (0, 0) for starting time & velocity.
+		Enter 0 for time to stop.
+	by Tom Grushka
+	3/17/2016
+*/
+
 #include <stdio.h>
 
 #define NUM_POINTS 100
@@ -12,20 +25,21 @@ void inputData(struct ACCEL *data, int *numPoints)
 {
 	double seconds;
 	double acceleration;
-	int scanned = 0;
+	int numValuesEntered = 0;
 	char c;
 	int i = 0;
 	
-	printf("Enter: Seconds (decimal), Acceleration (decimal, m/s^2)\n");
+	printf("Enter: Seconds (decimal), Acceleration (decimal, m/s^2), 0 to stop.\n");
 	for (i = 0; i < *numPoints; i++)
 	{
-		scanned = 0;
-		while (scanned != 2)
+		numValuesEntered = 0;
+		while (numValuesEntered != 2)
 		{
 			printf("%d.  ", i+1);
-			scanned = scanf("%lf, %lf", &seconds, &acceleration);
-			if (seconds == 0) scanned = 2;
+			numValuesEntered = scanf("%lf, %lf", &seconds, &acceleration);
+			if (seconds == 0) numValuesEntered = 2;
 			while ((c = getchar()) != '\n' && c != 0);
+			if (numValuesEntered != 2) printf("Please type exactly two values.\n");
 		}
 		if (seconds == 0)
 		{
@@ -34,7 +48,7 @@ void inputData(struct ACCEL *data, int *numPoints)
 		}
 		data[i].seconds = seconds;
 		data[i].acceleration = acceleration;
-		printf("You entered %lf seconds at an acceleration of %lf m/s^2.\n", seconds, acceleration);
+		// printf("You entered %lf seconds at an acceleration of %lf m/s^2.\n", seconds, acceleration);
 	}
 }
 
@@ -83,18 +97,16 @@ double integrate(struct ACCEL *data, int numPoints)
 	double x1 = 0, x2 = 0;
 	double y1 = 0, y2 = 0;
 	
-	if (numPoints < 2) return data[0].acceleration; // need at least 2 points to integrate
 	for (i = 0; i < numPoints; i++)
 	{
-		x1 = (i > 0) ? data[i-1].seconds : 0;
+		x1 = (i == 0) ? 0 : data[i-1].seconds;
 		x2 = data[i].seconds;
-		y1 = (i > 0) ? data[i-1].acceleration : 0;
+		y1 = (i == 0) ? 0 : data[i-1].acceleration;
 		y2 = data[i].acceleration;
 		
 		// https://en.wikipedia.org/wiki/Trapezoidal_rule#Non-uniform_grid
-		velocity += (x2 - x1) * (y2 + y1);
+		velocity += 0.5 * (x2 - x1) * (y2 + y1);
 	}
-	velocity /= 2;
 	
 	return velocity;
 }
