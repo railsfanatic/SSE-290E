@@ -1,18 +1,25 @@
 /*	HOMEWORK 4.3 & 4.4
 	Filename: students.c
 	Description: Allows user to enter up to NUM_STUDENTS
-		of student data structs, then allows user
-		to print info for students and
-		find a student by last name.
+		of student data structs, then allows user to:
+			- print list of students
+			- find student by last name (case insensitive)
+			- print info for a student
+		ADDITIONS:
+			- edit user (with existing value defaults)
+			- sort database by any of the 4 fields
+			- save data to file
+			- load data from file
+			- clear memory
 	by Tom Grushka
 	3/17/2016
 */
 
 #include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include <string.h>	// string funcs
+#include <time.h>	// date/time types & funcs
+#include <stdlib.h>	// malloc(), atoi(), exit()
+#include <ctype.h>	// isspace(), toupper(), tolower()
 
 #define MAX_STUDENTS 100
 
@@ -299,9 +306,11 @@ void listStudents()
 void sortStudents()
 {
 	char sortField;
+	char fieldName[20];
 	int i = 0;
 	int sorted = 0;
 	int swap = 0;
+	int desc = 0;
 	time_t t1;
 	time_t t2;
 	struct STUDENT tempStudent;
@@ -315,6 +324,28 @@ void sortStudents()
 		"C) Completed Credits ? ");
 	
 	sortField = toupper(inputString("", 2)[0]);
+	
+	desc = confirm("\nDescending (y/n) ? ");
+	
+	switch (sortField)
+	{
+		case 'F':
+			strcpy(fieldName, "First name");
+			break;
+		case 'E':
+			strcpy(fieldName, "Enrollment date");
+			break;
+		case 'C':
+			strcpy(fieldName, "Completed credits");
+			break;
+		case 'L':
+		default:
+			strcpy(fieldName, "Last name");
+			break;
+	}
+	
+	printf("\nSorting by: %s, %s ...\n\n",
+		fieldName, desc ? "Descending" : "Ascending");
 	
 	while (!sorted)
 	{
@@ -344,7 +375,7 @@ void sortStudents()
 						&& strcmp(students[i+1].firstName, students[i].firstName) < 0));
 					break;
 			}
-			if (swap)
+			if (desc ^ swap)
 			{
 				tempStudent = students[i];
 				students[i] = students[i+1];
@@ -447,23 +478,23 @@ int main()
 				sortStudents();
 				break;
 			case 5: // load
-				if (numStudents == 0 || confirm("Overwrite memory with students from file (y/n) ? "))
+				if (numStudents == 0 || confirm("LOAD file and LOSE all students in memory (y/n) ? "))
 					loadStudents();
 				break;
 			case 6: // save
 				if (numStudents == 0) printf("There are no students to save yet!\n");
-				else if (confirm("Overwrite the file (y/n) ? "))
+				else if (confirm("OVERWRITE the file (y/n) ? "))
 					saveStudents();
 				break;
 			case 7: // new
-				if (confirm("Delete all students from memory (y/n) ? "))
+				if (confirm("DELETE all students from memory (y/n) ? "))
 					clearStudents();
 				break;
 			case 8: // quit
 			default: // quit
-				if (confirm("Are you sure you want to quit (y/n) ? "))
+				if (confirm("QUIT and LOSE all data in memory (y/n) ? "))
 				{
-					printf("\nGoodbye!\n\n");
+					printf("\nThank you and goodbye!\n\n");
 					exit(0);
 				}
 				break;
