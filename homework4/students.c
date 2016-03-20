@@ -532,8 +532,8 @@ void sortStudents()
 					break;
 			}
 			/*	XOR desc ^ swap:
-				if "don't swap," order is correct for ascending
-				but must be swapped for descending, and vice-versa  */
+				if swap == 1, order must be swapped for ascending;
+				if swap == 0, order must be swapped for descending  */
 			if (desc ^ swap)
 			{
 				// swap students[i] and students[i+1] using temp variable
