@@ -707,5 +707,3 @@ int main()
 	// quit = 1: end program successfully
 	return 0;
 }
-
-
