@@ -95,6 +95,7 @@ void stripWhitespace(char *string) {
 /*	func:	inputString
 	in:		prompt (const char*) - prompt to display
 			size (size_t) - max size of input string
+				INCLUDING null terminator
 	out:	pointer to input string (char)
 	desc:	prompts user, then uses fgets() to input a string;
 			truncates and discards any input after size chars
@@ -120,16 +121,19 @@ char *inputString(const char *prompt, size_t size)
 	return in;
 }
 
-struct tm inputDate(const char* prompt)
+struct tm inputDate(const char *prompt)
 {
 	int m = 0;
 	int d = 0;
 	int y = 0;
 	char tempDate[10];
+	struct tm date = {0};
 	
 	do
 	{
 		strcpy(tempDate, inputString(prompt, 10));
+		if (strcmp(tempDate, "") == 0) return date;
+		
 		sscanf(tempDate, "%d/%d/%d", &m, &d, &y);
 		if (y < 100 && y >= 30) y += 1900;
 		if (y < 30) y += 2000;
@@ -137,11 +141,9 @@ struct tm inputDate(const char* prompt)
 			(d < 1 || d > 31) ||
 			(y < 1900 || y > 2100));
 	
-	struct tm date = {
-		.tm_mon = m - 1,
-		.tm_mday = d,
-		.tm_year = y - 1900
-	};
+	date.tm_mon = m - 1;
+	date.tm_mday = d;
+	date.tm_year = y - 1900;
 	mktime(&date);
 	
 	return date;
@@ -230,13 +232,47 @@ char *formatName(char *fn, char *ln, int lnf)
 	return s;
 }
 
-void editStudent(int i)
+void editStudent(struct STUDENT *s)
 {
-	if (i < 1 || i > numStudents) return;
-	i --;
+	char firstName[32];
+	char lastName[32];
+	int completedCredits;
+	struct tm enrollmentDate = {0};
+	struct tm noDate = {0};
 	
-	printf("Editing student:\n");
-	printStudent(&students[i]);
+	do {
+		printf("\nEditing Student #%d\n", numStudents + 1);
+		
+		printf("First name: [%s] ", s->firstName);
+		strcpy(firstName, inputString("", 32));
+		if (strcmp(firstName, "") == 0) strcpy(firstName, s->firstName);
+		
+		printf("Last name: [%s] ", s->lastName);
+		strcpy(lastName, inputString("", 32));
+		if (strcmp(lastName, "") == 0) strcpy(lastName, s->lastName);
+		
+		printf("Completed credits: [%d] ", s->completedCredits);
+		completedCredits = inputInteger("");
+		if (completedCredits == 0) completedCredits = s->completedCredits;
+		
+		printf("Enrollment date (mm/dd/yyyy): [%s] ", formatDate(s->enrollmentDate));
+		enrollmentDate = inputDate("");
+		if (difftime(mktime(&enrollmentDate), mktime(&noDate)) == 0) enrollmentDate = s->enrollmentDate;
+		
+		printf("\nFirst name: %s\n"
+			"Last name: %s\n"
+			"Completed credits: %d\n"
+			"Enrollment date: %s\n",
+				firstName,
+				lastName,
+				completedCredits,
+				asctime(&enrollmentDate));
+	} while (!confirm("\nInfo correct (y/n) ?"));
+	
+	strcpy(s->firstName, firstName);
+	strcpy(s->lastName, lastName);
+	s->completedCredits = completedCredits;
+	s->enrollmentDate = enrollmentDate;
 }
 
 void listStudents()
@@ -264,7 +300,67 @@ void listStudents()
 	
 	i = inputInteger("Enter # to edit, Enter to return to menu. ");
 	if (i < 1 || i > numStudents) return;
-	editStudent(i);
+	editStudent(&students[i-1]);
+}
+
+void sortStudents()
+{
+	char *sortField;
+	int i = 0;
+	int sorted = 0;
+	int swap = 0;
+	time_t t1;
+	time_t t2;
+	struct STUDENT tempStudent;
+	
+	if (numStudents < 2) return;
+	
+	printf("Sort by:\t"
+		"L) Last Name\n\t\t"
+		"F) First Name\n\t\t"
+		"E) Enrollment Date\n\t\t"
+		"C) Completed Credits ? ");
+	
+	sortField = inputString("", 2);
+	*sortField = toupper(*sortField);
+	
+	while (!sorted)
+	{
+		sorted = 1;
+		for (i = 0; i < numStudents - 1; i++)
+		{
+			swap = 0;
+			switch (*sortField)
+			{
+				case 'F': // first name
+					swap = ((strcmp(students[i+1].firstName, students[i].firstName) < 0)
+						|| (strcmp(students[i+1].firstName, students[i].firstName) == 0
+						&& strcmp(students[i+1].lastName, students[i].lastName) < 0));
+					break;
+				case 'E': // enrollment date
+					t1 = mktime(&students[i].enrollmentDate);
+					t2 = mktime(&students[i+1].enrollmentDate);
+					swap = (difftime(t1, t2));
+					break;
+				case 'C': // completed credits
+					swap = (students[i].completedCredits > students[i+1].completedCredits);
+					break;
+				case 'L': // last name
+				default:
+					swap = ((strcmp(students[i+1].lastName, students[i].lastName) < 0)
+						|| (strcmp(students[i+1].lastName, students[i].lastName) == 0
+						&& strcmp(students[i+1].firstName, students[i].firstName) < 0));
+					break;
+			}
+			if (swap)
+			{
+				tempStudent = students[i];
+				students[i] = students[i+1];
+				students[i+1] = tempStudent;
+				sorted = 0;
+			}
+		}
+	}
 }
 
 int main()
@@ -277,9 +373,10 @@ int main()
 			"1.  Add New Student(s)\n\n"
 			"2.  Find Students\n\n"
 			"3.  List All Students\n\n"
-			"4.  Load Students File (./students.dat)\n\n"
-			"5.  Save Students File (./students.dat)\n\n"
-			"6.  Quit\n\n", numStudents);
+			"4.  Sort Database\n\n"
+			"5.  Load Students File (./students.dat)\n\n"
+			"6.  Save Students File (./students.dat)\n\n"
+			"7.  Quit\n\n", numStudents);
 		
 		choice = inputInteger("Choice: ");
 		printf("\n");
@@ -295,11 +392,14 @@ int main()
 			case 3: // list
 				listStudents();
 				break;
-			case 4: // load
+			case 4: // sort
+				sortStudents();
+				break;
+			case 5: // load
 				if (numStudents == 0 || confirm("Overwrite memory with students from file (y/n) ? "))
 					loadStudents();
 				break;
-			case 5: // save
+			case 6: // save
 				if (confirm("Overwrite the file (y/n) ? "))
 					saveStudents();
 				break;
