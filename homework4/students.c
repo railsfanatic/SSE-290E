@@ -39,13 +39,10 @@ int saveStudents()
 		return 1;
 	}
 	
-	printf("Saving %d students ...\t", numStudents);
+	printf("Saving %d students ...\n", numStudents);
 	fwrite(&numStudents, sizeof(int), 1, file);
 	for (i = 0; i < numStudents; i++)
-	{
 		fwrite(&students[i], sizeof(struct STUDENT), 1, file);
-		printf("%d  ", i);
-	}
 	
 	fclose(file);
 	return 0;
@@ -64,12 +61,9 @@ int loadStudents()
 	}
 	
 	fread(&numStudents, sizeof(int), 1, file);
-	printf("\nLoading %d students ...\t", numStudents);
+	printf("\nLoading %d students ...\n", numStudents);
 	for (i = 0; i < numStudents; i++)
-	{
 		fread(&students[i], sizeof(struct STUDENT), 1, file);
-		printf("%d  ", i);
-	}
 	
 	fclose(file);
 	return 0;
@@ -338,7 +332,7 @@ void sortStudents()
 				case 'E': // enrollment date
 					t1 = students[i].enrollmentDate;
 					t2 = students[i+1].enrollmentDate;
-					swap = (difftime(t1, t2));
+					swap = (difftime(t1, t2) > 0);
 					break;
 				case 'C': // completed credits
 					swap = (students[i].completedCredits > students[i+1].completedCredits);
@@ -359,6 +353,7 @@ void sortStudents()
 			}
 		}
 	}
+	listStudents();
 }
 
 char *downcase(char *s)
@@ -377,7 +372,6 @@ void findStudent()
 	char *lastName;
 	int found[MAX_STUDENTS];
 	int numFound = 0;
-	int findAnother = 0;
 	
 	printf("FIND STUDENT BY LAST NAME\n\n");
 	
@@ -409,6 +403,16 @@ void findStudent()
 	} while (confirm("Find another (y/n) ? "));
 }
 
+void clearStudents()
+{
+	int i = 0;
+	for (i = 0; i < MAX_STUDENTS; i++)
+	{
+		memset(&students[i], 0, sizeof(struct STUDENT));
+	}
+	numStudents = 0;
+}
+
 int main()
 {
 	int choice = 0;
@@ -416,13 +420,14 @@ int main()
 	do {
 		printf("\n\nWelcome to STUDENTS!\n===================\n\n"
 			"There are currently %d students in memory.\n\n"
-			"1.  Add New Student(s)\n\n"
-			"2.  Find Student by Last Name\n\n"
-			"3.  List All Students\n\n"
-			"4.  Sort Database\n\n"
-			"5.  Load Students File (./students.dat)\n\n"
-			"6.  Save Students File (./students.dat)\n\n"
-			"7.  Quit\n\n", numStudents);
+			"1.  Add New Student(s)\n"
+			"2.  Find Student by Last Name\n"
+			"3.  List All Students\n"
+			"4.  Sort Database\n"
+			"5.  Load Students File (./students.dat)\n"
+			"6.  Save Students File (./students.dat)\n"
+			"7.  Clear Memory (New Database)\n"
+			"8.  Quit\n\n", numStudents);
 		
 		choice = inputInteger("Choice: ");
 		printf("\n");
@@ -450,10 +455,15 @@ int main()
 				else if (confirm("Overwrite the file (y/n) ? "))
 					saveStudents();
 				break;
+			case 7: // new
+				if (confirm("Delete all students from memory (y/n) ? "))
+					clearStudents();
+				break;
+			case 8: // quit
 			default: // quit
 				if (confirm("Are you sure you want to quit (y/n) ? "))
 				{
-					printf("\nGoodbye!\n");
+					printf("\nGoodbye!\n\n");
 					exit(0);
 				}
 				break;
