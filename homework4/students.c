@@ -15,7 +15,10 @@
 	3/17 - 3/20/2016
 */
 
-#define _CRT_SECURE_NO_WARNINGS
+#ifdef _WIN32
+	#define _CRT_SECURE_NO_WARNINGS
+	#define strdup _strdup
+#endif
 
 #include <stdio.h>
 #include <string.h>	// string funcs
@@ -230,7 +233,7 @@ char *downcase(char *s)
 {
 	// allocate copy of string with new pointer
 	char *d = (char *)malloc(strlen(s) * sizeof(char));
-	d = _strdup(s);	// duplicate *s into *d
+	d = strdup(s);	// duplicate *s into *d
 	char *p = d;	// create another pointer to *d
 					// loop d and lowercase all chars in the duplicate
 	for (; *d; ++d) *d = tolower(*d);
