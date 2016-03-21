@@ -11,6 +11,13 @@
 	3/17/2016
 */
 
+#ifdef _MSC_VER
+	// Quiet security warnings about strcmp(), scanf(), etc. on Windows
+	#define _CRT_SECURE_NO_WARNINGS
+	// Quiet deprecation warnings about strdup(), etc. on Windows
+	#define _CRT_NONSTDC_NO_DEPRECATE
+#endif
+
 #include <stdio.h>
 
 #define NUM_POINTS 100
@@ -181,5 +188,10 @@ int main()
 	// print resultant velocity
 	printf("\nThe resultant velocity is %lf m/s.\n", result);
 	
+	#ifdef _MSC_VER
+		getchar();
+		getchar();
+	#endif
+
 	return 0;	// exit without error
 }
