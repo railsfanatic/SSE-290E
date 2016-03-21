@@ -32,12 +32,22 @@
 
 // global declarations
 
+/*	custom struct for storing a date because
+	time_t has problems with dates before 1902
+	and struct tm is too complex for our purposes */
+struct DATE
+{
+	int month;
+	int day;
+	int year;
+};
+
 struct STUDENT	// structure to store a student record
 {
 	char firstName[32];		// first name
 	char lastName[32];		// last name
 	int completedCredits;	// # credits completed
-	time_t enrollmentDate;	// date they enrolled
+	struct DATE enrollmentDate;	// date they enrolled
 };
 
 // global students[] array of STUDENT structs and MAX_STUDENTS elements
@@ -45,6 +55,26 @@ struct STUDENT students[MAX_STUDENTS];
 
 // global integer of the total # of students in students[]
 int numStudents = 0;
+
+/*	compDates
+	very simply, compares two struct DATEs to compare which comes first
+	CANNOT be used for date difference!
+	in:  firstDate (struct DATE) - 1st date to compare
+	     secondDate (struct DATE) - 2nd date to compare
+	out: (int)	1	if 1st date > 2nd date
+				0	if 1st date == 2nd date
+				-1	if 1st date < 2nd date
+*/
+int compDates(struct DATE firstDate, struct DATE secondDate)
+{
+	// get an integer "value" for each input date
+	int date1 = firstDate.year * 10000 + firstDate.month * 100 + firstDate.day;
+	int date2 = secondDate.year * 10000 + secondDate.month * 100 + secondDate.day;
+	// see which comes first & return corresponding value
+	if (date1 - date2 < 0) return -1;
+	else if (date1 == date2) return 0;
+	else return 1;
+}
 
 /*	saveStudents
 	save from global students[] array into binary file
@@ -175,24 +205,25 @@ char *inputString(const char *prompt, int size)
 }
 
 /*	inputDate
-	get string input from user, convert to time_t (date/time)
+	get string input from user, convert to struct DATE
 	in:  prompt (const char *) - string to prompt user
-	out: time_t - C date/time converted from user input
+	out: struct DATE - converted from user input
 */
-time_t inputDate(const char *prompt)
+struct DATE inputDate(const char *prompt)
 {
 	// declarations
 	int m = 0;		// user entered month
 	int d = 0;		// user entered day
 	int y = 0;		// user entered year
 	char tempDate[10];	// holds user string
-	struct tm date = {0};	// struct used to convert string to time_t
+	struct tm checkDate = {0}; // used for validation
+	struct DATE date = {0}; // date to return
 	
 	// loop until valid date entered
 	do {
 		// get user string into tempDate
 		strcpy(tempDate, inputString(prompt, 10));
-		if (strcmp(tempDate, "") == 0) return mktime(&date);
+		if (strcmp(tempDate, "") == 0) return date;
 		
 		// extract m, d, y from user string
 		sscanf(tempDate, "%d/%d/%d", &m, &d, &y);
@@ -207,12 +238,18 @@ time_t inputDate(const char *prompt)
 			(y < 1900 || y > 2100));
 	
 	// use a (struct tm) to "construct" date
-	date.tm_mon = m - 1;
-	date.tm_mday = d;
-	date.tm_year = y - 1900;
+	checkDate.tm_mon = m - 1;
+	checkDate.tm_mday = d;
+	checkDate.tm_year = y - 1900;
 	
-	// use mktime to convert date to a time_t & return
-	return mktime(&date);
+	// validate date
+	mktime(&checkDate);
+	
+	date.month = checkDate.tm_mon + 1;
+	date.day = checkDate.tm_mday;
+	date.year = checkDate.tm_year + 1900;
+	
+	return date;
 }
 
 /*	inputInteger
@@ -259,81 +296,17 @@ int confirm(const char *prompt)
 	else return 0;
 }
 
-/*	addStudents
-	function with loop to add students one at a time
-	in:  none
-	out: none
-*/
-void addStudents()
-{
-	// declarations
-	char firstName[32];		// store input first name
-	char lastName[32];		// store input last name
-	int completedCredits;	// store input completed credits
-	time_t enrollmentDate;	// store input enrollment date
-	struct STUDENT *s;		// pointer to a student record
-	
-	// print header
-	printf("Add Students\n============\n\n"
-		"Start entering students. Leave first name blank to stop.\n\n");
-	
-	// outer loop for entering another student
-	do {
-		// inner loop for repeating incorrect entry
-		do {
-			// print # entering
-			printf("Student #%d\n", numStudents + 1);
-			
-			// get input from user
-			strcpy(firstName, inputString("First name: ", 32));
-			if (strcmp(firstName, "") == 0) return;
-			
-			strcpy(lastName, inputString("Last name: ", 32));
-			if (strcmp(lastName, "") == 0) return;
-			
-			completedCredits = inputInteger("Completed credits: ");
-			enrollmentDate = inputDate("Enrollment date (mm/dd/yyyy): ");
-			
-			// display input info back to user
-			printf("\nFirst name: %s\n"
-				"Last name: %s\n"
-				"Completed credits: %d\n"
-				"Enrollment date: %s\n",
-					firstName,
-					lastName,
-					completedCredits,
-					ctime(&enrollmentDate));
-			
-			// repeat if info incorrect
-		} while (!confirm("Info correct (y/n) ?"));
-		
-		// get pointer to new student
-		s = &students[numStudents];
-		
-		// put info into array at pointer
-		strcpy(s->firstName, firstName);
-		strcpy(s->lastName, lastName);
-		s->completedCredits = completedCredits;
-		s->enrollmentDate = enrollmentDate;
-		
-		// increment # of students
-		numStudents ++;
-	
-	// loop if user wants to input another student
-	} while (confirm("Add another student (y/n) ?"));
-}
-
 /*	formatDate
 	formats a date using strftime in mm/dd/yyyy format
-	in:  d (time_t) - date to format time_t encoded
+	in:  d (struct DATE) - date to format
 	out: pointer to char - formatted date string
 */
-char *formatDate(time_t d)
+char *formatDate(struct DATE d)
 {
 	// allocate memory for the formatted date
 	char *s = malloc(10 * sizeof(char));
 	// format the date in mm/dd/yyyy
-	strftime(s, 10, "%m/%d/%Y", localtime(&d));
+	sprintf(s, "%.2d/%.2d/%.4d", d.month, d.day, d.year);
 	return s;	// return pointer to formatted date string
 }
 
@@ -369,6 +342,70 @@ char *formatName(char *fn, char *ln, int lnf)
 	return s;
 }
 
+/*	addStudents
+	function with loop to add students one at a time
+	in:  none
+	out: none
+*/
+void addStudents()
+{
+	// declarations
+	char firstName[32];		// store input first name
+	char lastName[32];		// store input last name
+	int completedCredits;	// store input completed credits
+	struct DATE enrollmentDate;	// store input enrollment date
+	struct STUDENT *s;		// pointer to a student record
+	
+	// print header
+	printf("Add Students\n============\n\n"
+		"Start entering students. Leave first name blank to stop.\n\n");
+	
+	// outer loop for entering another student
+	do {
+		// inner loop for repeating incorrect entry
+		do {
+			// print # entering
+			printf("Student #%d\n", numStudents + 1);
+			
+			// get input from user
+			strcpy(firstName, inputString("First name: ", 32));
+			if (strcmp(firstName, "") == 0) return;
+			
+			strcpy(lastName, inputString("Last name: ", 32));
+			if (strcmp(lastName, "") == 0) return;
+			
+			completedCredits = inputInteger("Completed credits: ");
+			enrollmentDate = inputDate("Enrollment date (mm/dd/yyyy): ");
+			
+			// display input info back to user
+			printf("\nFirst name: %s\n"
+				"Last name: %s\n"
+				"Completed credits: %d\n"
+				"Enrollment date: %s\n",
+					firstName,
+					lastName,
+					completedCredits,
+					formatDate(enrollmentDate));
+			
+			// repeat if info incorrect
+		} while (!confirm("Info correct (y/n) ?"));
+		
+		// get pointer to new student
+		s = &students[numStudents];
+		
+		// put info into array at pointer
+		strcpy(s->firstName, firstName);
+		strcpy(s->lastName, lastName);
+		s->completedCredits = completedCredits;
+		s->enrollmentDate = enrollmentDate;
+		
+		// increment # of students
+		numStudents ++;
+	
+	// loop if user wants to input another student
+	} while (confirm("Add another student (y/n) ?"));
+}
+
 /*	editStudent
 	edit an existing student, and display details
 	as defaults for input
@@ -380,9 +417,9 @@ void editStudent(struct STUDENT *s)
 	char firstName[32];		// store input first name
 	char lastName[32];		// store input last name
 	int completedCredits;	// store input credits
-	time_t enrollmentDate;	// store input enrollment date
+	struct DATE enrollmentDate;	// store input enrollment date
 	// store an "empty date" to compare with entered date to indicate no change
-	time_t noDate = mktime(&(struct tm){0});
+	struct DATE noDate = {0};
 	
 	do {
 		// display what # student we're editing
@@ -406,8 +443,8 @@ void editStudent(struct STUDENT *s)
 		// input enrollment date & update only if input not empty
 		printf("Enrollment date (mm/dd/yyyy): [%s] ", formatDate(s->enrollmentDate));
 		enrollmentDate = inputDate("");
-		// since inputDate returns a time_t, we must check against an "empty" date
-		if (difftime(enrollmentDate, noDate) == 0) enrollmentDate = s->enrollmentDate;
+		// since inputDate returns a struct DATE, we must check against an "empty" date
+		if (compDates(enrollmentDate, noDate) == 0) enrollmentDate = s->enrollmentDate;
 		
 		// print details entered
 		printf("\nFirst name: %s\n"
@@ -417,7 +454,7 @@ void editStudent(struct STUDENT *s)
 				firstName,
 				lastName,
 				completedCredits,
-				ctime(&enrollmentDate));
+				formatDate(enrollmentDate));
 		// confirm with user whether info correct, repeat input if not
 	} while (!confirm("\nInfo correct (y/n) ?"));
 	
@@ -547,7 +584,7 @@ void sortStudents()
 						&& strcmp(students[i+1].lastName, students[i].lastName) < 0));
 					break;
 				case 'E': // enrollment date
-					swap = (difftime(students[i].enrollmentDate, students[i+1].enrollmentDate) > 0);
+					swap = (compDates(students[i].enrollmentDate, students[i+1].enrollmentDate) > 0);
 					break;
 				case 'C': // completed credits
 					swap = (students[i].completedCredits > students[i+1].completedCredits);
