@@ -6,6 +6,13 @@
 	3/17/2016
 */
 
+#ifdef _MSC_VER
+	// Quiet security warnings about strcmp(), scanf(), etc. on Windows
+	#define _CRT_SECURE_NO_WARNINGS
+	// Quiet deprecation warnings about strdup(), etc. on Windows
+	#define _CRT_NONSTDC_NO_DEPRECATE
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -162,6 +169,11 @@ int main()
 	printf("Here's the sorted list:\n");
 	printPeople(people, numPeople);
 	
+	#ifdef _MSC_VER
+		getchar();
+		getchar();
+	#endif
+
 	return 0;
 }
 
