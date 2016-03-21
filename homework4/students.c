@@ -15,6 +15,8 @@
 	3/17 - 3/20/2016
 */
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <string.h>	// string funcs
 #include <time.h>	// date/time types & funcs
@@ -129,8 +131,9 @@ void stripWhitespace(char *string) {
 	
 	// step from the end of the string to last "non space"
 	// and decrement the endOfString position
-	while(string < endOfString && isspace(*endOfString))
-		--endOfString;
+	if (len < 2) // bypass obscure isspace() bug on Windows
+		while (string <= endOfString && isspace(*endOfString))
+			--endOfString;
 	
 	// terminate the string after the last "non space"
 	*endOfString = '\0';
@@ -144,7 +147,7 @@ void stripWhitespace(char *string) {
 	desc:	prompts user, then uses fgets() to input a string;
 			truncates and discards any input after size chars
 */
-char *inputString(const char *prompt, size_t size)
+char *inputString(const char *prompt, int size)
 {
 	char *in = malloc(size);
 	int i = 0;
@@ -160,6 +163,7 @@ char *inputString(const char *prompt, size_t size)
 	// if we didn't find newline, flush overrun chars
 	if (c == 0) while ((c = getchar()) != '\n' && c != 0);
 	
+	// remove whitespace from beginning and end of string
 	stripWhitespace(in);
 	
 	return in;
@@ -216,6 +220,24 @@ int inputInteger(const char *prompt)
 	return atoi(inputString(prompt, 10));
 }
 
+
+/*	downcase
+convert a string to lowercase
+in:  s (pointer to string)
+out: pointer to copy of s, in lowercase
+*/
+char *downcase(char *s)
+{
+	// allocate copy of string with new pointer
+	char *d = (char *)malloc(strlen(s) * sizeof(char));
+	d = _strdup(s);	// duplicate *s into *d
+	char *p = d;	// create another pointer to *d
+					// loop d and lowercase all chars in the duplicate
+	for (; *d; ++d) *d = tolower(*d);
+	// because d is "gone", return p
+	return p;
+}
+
 /*	confirm
 	prints a prompt and asks user to enter y/n
 	in:  prompt (const char *) - string to prompt user
@@ -223,11 +245,12 @@ int inputInteger(const char *prompt)
 */
 int confirm(const char *prompt)
 {
+	char *confirmation;
+
 	// get first character of string input
-	char *conf = inputString(prompt, 2);
-	
+	confirmation = inputString(prompt, 2);
 	// if Y or y, return 1; else return 0
-	if (strcmp(conf, "y") == 0 || strcmp(conf, "Y") == 0) return 1;
+	if (strcmp(confirmation, "y") == 0) return 1;
 	else return 0;
 }
 
@@ -546,23 +569,6 @@ void sortStudents()
 	}
 	// when done sorting, print the sorted student list
 	listStudents();
-}
-
-/*	downcase
-	convert a string to lowercase
-	in:  s (pointer to string)
-	out: pointer to copy of s, in lowercase
-*/
-char *downcase(char *s)
-{
-	// allocate copy of string with new pointer
-	char *d = (char *)malloc(strlen(s) * sizeof(char));
-	d = strdup(s);	// duplicate *s into *d
-	char *p = d;	// create another pointer to *d
-	// loop d and lowercase all chars in the duplicate
-	for ( ; *d; ++d) *d = tolower(*d);
-	// because d is "gone", return p
-	return p;
 }
 
 /*	findStudent
