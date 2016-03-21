@@ -773,5 +773,10 @@ int main()
 	} while (quit == 0);	// keep repeating until user chooses to quit
 	
 	// quit = 1: end program successfully
+	#ifdef _MSC_VER
+		getchar();
+		getchar();
+	#endif
+
 	return 0;
 }
