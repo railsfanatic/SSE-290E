@@ -216,8 +216,8 @@ struct DATE inputDate(const char *prompt)
 	int d = 0;		// user entered day
 	int y = 0;		// user entered year
 	char tempDate[10];	// holds user string
-	struct tm checkDate = {0}; // used for validation
 	struct DATE date = {0}; // date to return
+	int dateValid = 0;
 	
 	// loop until valid date entered
 	do {
@@ -232,22 +232,42 @@ struct DATE inputDate(const char *prompt)
 		if (y < 100 && y >= 30) y += 1900;
 		if (y < 30) y += 2000;
 		
+		dateValid = 1;
+		
+		// First day of the month is 1.
+		if (d < 1) dateValid = 0;
+		
+		// Thirty days have September, April, June and November.
+		if (d > 30 && (m == 9 || m == 4 || m == 6 || m == 11)) dateValid = 0;
+		
+		// All the rest have thirty-one,
+		if (d > 31) dateValid = 0;
+		
+		// no exceptions, but save one:
+		if (m == 2)
+		{
+			// twenty-eight hath February,
+			if (d > 28) dateValid = 0;
+			
+			/* but from this we still must vary
+			   (except once each centenary!)
+			   each four years when we do find
+			   a small leap to twenty-nine. */
+			if (d == 29 && (y % 4 == 0) && !(y % 100 == 0)) dateValid = 1;
+		}
+		
+		// month valid?
+		if (m < 1 || m > 12) dateValid = 0;
+		
+		// are we really tracking students from B.C. or 1,000 years in the future?
+		if (y < 0 || y > 3000) dateValid = 0;
+		
 		// validate m, d, and y; repeat input if invalid
-	} while ((m < 1 || m > 12) ||
-			(d < 1 || d > 31) ||
-			(y < 1900 || y > 2100));
+	} while (!dateValid);
 	
-	// use a (struct tm) to "construct" date
-	checkDate.tm_mon = m - 1;
-	checkDate.tm_mday = d;
-	checkDate.tm_year = y - 1900;
-	
-	// validate date
-	mktime(&checkDate);
-	
-	date.month = checkDate.tm_mon + 1;
-	date.day = checkDate.tm_mday;
-	date.year = checkDate.tm_year + 1900;
+	date.month = m;
+	date.day = d;
+	date.year = y;
 	
 	return date;
 }
